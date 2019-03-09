@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ATO">
+      <UniqueIdentifier>{b24b544d-9d45-415f-92c3-5e1cea877a7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="TASC">
+      <UniqueIdentifier>{e01b160a-ffaf-4c33-a121-d81530ca9b09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ATC">
+      <UniqueIdentifier>{f9ccac34-03bd-4466-b49d-a5f5d3e5cac6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="header\Header.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="header\define.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="header\ats.h">
+      <Filter>Header</Filter>
+    </ClInclude>
+    <ClInclude Include="resource\resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="ATO\ATO.h">
+      <Filter>ATO</Filter>
+    </ClInclude>
+    <ClInclude Include="ATC\ATC.h">
+      <Filter>ATC</Filter>
+    </ClInclude>
+    <ClInclude Include="TASC\TASC.h">
+      <Filter>TASC</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\dllmain.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Function.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="ATO\ATO.cpp">
+      <Filter>ATO</Filter>
+    </ClCompile>
+    <ClCompile Include="ATC\ATC.cpp">
+      <Filter>ATC</Filter>
+    </ClCompile>
+    <ClCompile Include="TASC\TASC.cpp">
+      <Filter>TASC</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Source.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="header\define.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dllmain.def">
+      <Filter>Source</Filter>
+    </None>
+    <None Include="other\indexes.xlsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="resource\Resource.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="other\Text.txt" />
+  </ItemGroup>
+</Project>
