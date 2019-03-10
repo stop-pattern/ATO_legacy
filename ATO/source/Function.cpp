@@ -30,9 +30,24 @@ void GetPath(HMODULE hModule) {
 }
 
 void reload(void) {
-	
-	if (ATCstatus ==ATC_status::OFF)	{
-		 
+	switch (ATCstatus) {
+	case ATC_status::ATO_ON:
+	case ATC_status::ATO_driving:
+	case ATC_status::ATO_stopping:
+	case ATC_status::ATO_waiting:
+	case ATC_status::ATO_TASC_control:
+	case ATC_status::ATO_TASC_brake:
+		ATCstatus = ATC_status::ATO_waiting;
+		break;
+	case ATC_status::TASC_ON:
+	case ATC_status::TASC_control:
+	case ATC_status::TASC_brake:
+	case ATC_status::TASC_waiting:
+		ATCstatus = ATC_status::TASC_waiting;
+		break;
+	case ATC_status::OFF:
+	default:
+		break;
 	}
 }
 
@@ -58,10 +73,21 @@ void SetStatus(bool in) {
 				ATCstatus = 0;
 				break;
 			}
-			ATCstatus = ATC_status::ATO_ON;
 		}
 	}
 	else {
 		ATCstatus = ATC_status::OFF;
+	}
+}
+
+void setKey(int in) {
+	if (key_S == false) {
+		MasCon_key += in;
+		if (MasCon_key < 0) {
+			MasCon_key = 0;
+		}
+		else if (MasCon_key > 8) {
+			MasCon_key = 8;
+		}
 	}
 }

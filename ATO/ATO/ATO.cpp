@@ -4,21 +4,10 @@
 
 #define ATO_LAG 500	//ラグ[ms]
 
-int ATO::Limit;	//目標速度
-int ATO::Mode = 1;	//ATO運転モード
-Hand ATO::control;	//ハンドル制御値
 
-bool ATO::isCSC;	//ATO定速
-int ATO::button_buf;
 
-const int ATO::Reference_Speed[4][256] = {
-	{0,25,45,65,100,0,0,0,0,0,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,120,0,30,0,0,0,45,40,35,30,25,20,15,10,5,0,0,0,25,40,65},
-	{0,0,0,0,0,0,0,0,0,0,0,5,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,115,0,30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,7,7,12,17,22,27,32,37,42,47,52,57,62,67,72,77,82,87,92,97,102,107,117,0,32,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-	{0,0,0,0,0,0,0,0,0,0,0,5,5,10,15,20,20,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,0,20,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
-};
 
-void ATO::Control(State S, int * panel, int * sound) {
+void c_ATO::Control(State S, int * panel, int * sound) {
 	switch (ATCstatus) {
 	case ATC_status::ATO_stopping:
 		control.B = 4;
@@ -90,13 +79,13 @@ void ATO::Control(State S, int * panel, int * sound) {
 }
 
 
-void ATO::CSC() {
+void c_ATO::CSC() {
 	if (accelaration > 0.5) {
 		control.B += 1;
-		control.P -= 1;
+		control.P = 0;
 	}
 	else if (accelaration < -0.5) {
-		control.B -= 1;
+		control.B = 0;
 		control.P += 1;
 	}
 	else {
@@ -110,7 +99,7 @@ void ATO::CSC() {
 }
 
 
-bool ATO::Departure() {
+bool c_ATO::Departure() {
 	if (key_A1 == true && (key_A2 == true || key_B1 == true)) {
 		if (door == false && Stat.V == 0 && manual.B == 0 && manual.P == 0 && manual.R == 1 && LimitSpeed >= 25) {
 			return true;
@@ -119,12 +108,12 @@ bool ATO::Departure() {
 	return false;
 }
 
-void ATO::SignalChange() {
+void c_ATO::SignalChange() {
 	Limit = Reference_Speed[Mode][signal];
 }
 
 
-void ATO::ChangeMode(int in) {
+void c_ATO::ChangeMode(int in) {
 	if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
 		if (Mode > 0 && Mode < 3) {
 			Mode += in;

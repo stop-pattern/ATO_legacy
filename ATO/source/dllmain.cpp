@@ -56,14 +56,17 @@ DE void SC Initialize(int b) {
 }
 DE Hand SC Elapse(State S, int * panel, int * sound) {
 	accelaration = (S.V - Stat.V) / (S.T - Stat.T) * 1000;
-	MasCon_key = 1;	// panel[92];
+	MasCon_key;	// panel[92];
 	ATC_SW = panel[72];
 
 	handle.P = manual.P;
 	handle.B = manual.B;
 	handle.R = manual.R;
 
-	ATO::Control(S, panel, sound);
+	if (S.T - lag_cnt >= LAG) {
+		ATO.Control(S, panel, sound);
+		lag_cnt = S.T;
+	}
 
 	if (accelaration > 7.5) {
 	//	handle.B = specific.E;
@@ -76,29 +79,30 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	case ATC_status::ATO_waiting:
 	case ATC_status::ATO_TASC_control:
 	case ATC_status::ATO_TASC_brake:
-		if (ATO::control.P > handle.P) {
-			handle.P = ATO::control.P;
+		if (ATO.control.P > handle.P) {
+			handle.P = ATO.control.P;
 		}
-		if (ATO::control.B > handle.B) {
-			handle.B = ATO::control.B;
+		if (ATO.control.B > handle.B) {
+			handle.B = ATO.control.B;
 		}
 	case ATC_status::TASC_ON:
 	case ATC_status::TASC_control:
 	case ATC_status::TASC_brake:
-		if (TASC::control.P > handle.P) {
-			handle.P = TASC::control.P;
+		if (TASC.control.P > handle.P) {
+			handle.P = TASC.control.P;
 		}
-		if (TASC::control.B > handle.B) {
-			handle.B = TASC::control.B;
+		if (TASC.control.B > handle.B) {
+			handle.B = TASC.control.B;
 		}
 		break;
 	default:
 		break;
 	}
 
+	panel[51] = handle.B;
 	panel[66] = handle.P;
 	panel[67] = manual.B;
-	panel[51] = handle.B;
+	panel[92] = MasCon_key;
 	panel[135] = LimitSpeed * 10;
 
 	Stat = S;
@@ -119,7 +123,7 @@ DE void SC DoorOpen() {
 		ATCstatus = ATC_status::ATO_stopping;
 		break;
 	case 2:	//TASC
-		ATCstatus = ATC_status::TASC_ON;
+		ATCstatus = ATC_status::TASC_waiting;
 		break;
 	default:
 		break;
@@ -155,15 +159,14 @@ DE void SC KeyDown(int k) {
 		key_D = true;
 		break;
 	case ATSKeys::E:
-		ATO::ChangeMode(-1);
+		ATO.ChangeMode(-1);
 		key_E = true;
 		break;
 	case ATSKeys::F:
-		ATO::ChangeMode(+1);
+		ATO.ChangeMode(+1);
 		key_F = true;
 		break;
 	case ATSKeys::G:
-		SetStatus(0);
 		key_G = true;
 		break;
 	case ATSKeys::H:
@@ -171,9 +174,11 @@ DE void SC KeyDown(int k) {
 		key_H = true;
 		break;
 	case ATSKeys::I:
+		setKey(-1);
 		key_I = true;
 		break;
 	case ATSKeys::J:
+		setKey(+1);
 		key_J = true;
 		break;
 	case ATSKeys::K:
@@ -243,7 +248,7 @@ DE void SC HornBlow(int k) {
 DE void SC SetSignal(int a) {
 	signal = a;
 	LimitSpeed = SpeedLimit[a];
-	ATO::SignalChange();
+	ATO.SignalChange();
 }
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {

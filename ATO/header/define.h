@@ -31,6 +31,7 @@ enum ATC_status {
 	TASC_ON = 20,	//SW=TASC
 	TASC_control,	//controling
 	TASC_brake,	//braking
+	TASC_waiting,	//waiting for control
 };
 
 

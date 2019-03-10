@@ -1,10 +1,11 @@
 #ifndef _TASC_
 #define _TASC_
 
-namespace TASC {
+class c_TASC {
+public:
 	void Control(void);
-
-	extern Hand control;	//ハンドル制御値
+	Hand control;	//ハンドル制御値
+private:
 };
 
 #endif // !_TASC_
