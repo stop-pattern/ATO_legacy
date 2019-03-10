@@ -69,6 +69,8 @@ void SetStatus(bool in) {
 			case Key::JNR:
 			case Key::OER:
 			case Key::TOY:
+				ATCstatus = ATC_status::ON;
+				break;
 			default:
 				ATCstatus = 0;
 				break;
@@ -89,5 +91,6 @@ void setKey(int in) {
 		else if (MasCon_key > 8) {
 			MasCon_key = 8;
 		}
+		ATCstatus == ATC_status::OFF ? SetStatus(false) : SetStatus(true);
 	}
 }

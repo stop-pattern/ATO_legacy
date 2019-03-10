@@ -69,7 +69,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	}
 
 	if (accelaration > 7.5) {
-	//	handle.B = specific.E;
+		//	handle.B = specific.E;
 	}
 
 	switch (ATCstatus) {
@@ -79,10 +79,10 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	case ATC_status::ATO_waiting:
 	case ATC_status::ATO_TASC_control:
 	case ATC_status::ATO_TASC_brake:
-		if (ATO.control.P > handle.P) {
+		if (manual.B == 0 || manual.P == 0) {
 			handle.P = ATO.control.P;
 		}
-		if (ATO.control.B > handle.B) {
+		if (manual.P == 0 || manual.B < ATO.control.B) {
 			handle.B = ATO.control.B;
 		}
 	case ATC_status::TASC_ON:
@@ -98,12 +98,17 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	default:
 		break;
 	}
-
+	if (signal > 9 && signal < 36) {
+		for (size_t i = 101; i < 131; i++) {
+			panel[i] = false;
+		}
+		panel[LimitSpeed / 5 + 102] = true;
+	}
 	panel[51] = handle.B;
 	panel[66] = handle.P;
 	panel[67] = manual.B;
 	panel[92] = MasCon_key;
-	panel[135] = LimitSpeed * 10;
+	panel[135] = ATO.Limit * 10;
 
 	Stat = S;
 	return handle;
@@ -167,10 +172,11 @@ DE void SC KeyDown(int k) {
 		key_F = true;
 		break;
 	case ATSKeys::G:
+		SetStatus(false);
 		key_G = true;
 		break;
 	case ATSKeys::H:
-		SetStatus(1);
+		SetStatus(true);
 		key_H = true;
 		break;
 	case ATSKeys::I:
@@ -248,6 +254,7 @@ DE void SC HornBlow(int k) {
 DE void SC SetSignal(int a) {
 	signal = a;
 	LimitSpeed = SpeedLimit[a];
+
 	ATO.SignalChange();
 }
 DE void SC SetBeaconData(Beacon b) {

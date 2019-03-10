@@ -13,9 +13,9 @@ public:
 	void ChangeMode(int);	//運転モード変更
 
 	Hand control;	//ハンドル制御値
+	int Limit;	//目標速度
 private:
 	bool isCSC;	//ATO定速
-	int Limit;	//目標速度
 	int Mode = 1;	//ATO運転モード
 	int button_buf;	//ボタン押下時ラグ判定用
 

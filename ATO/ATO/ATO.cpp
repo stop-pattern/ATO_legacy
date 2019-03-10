@@ -8,6 +8,7 @@
 
 
 void c_ATO::Control(State S, int * panel, int * sound) {
+
 	switch (ATCstatus) {
 	case ATC_status::ATO_stopping:
 		control.B = 4;
@@ -26,22 +27,22 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 		}
 		control.P = 0;
 		control.B = 0;
-		panel[67] = manual.B;
-		panel[136] = true;
-		panel[137] = false;
-		panel[138] = false;
-		panel[139] = false;
-		panel[140] = 0;
-		panel[141] = false;
-		panel[142] = false;
-		panel[143] = false;
-		panel[144] = 0;
-		panel[145] = 0;
-		panel[146] = true;
-		panel[147] = false;
-		panel[148] = 0;
-		panel[149] = 0;
-		panel[150] = false;
+		panel[Brake_notches] = manual.B;
+		panel[TASC_power] = true;
+		panel[TASC_release] = false;
+		panel[TASC_braking] = false;
+		panel[TASC_controling] = false;
+		panel[TASC_noches] = 0;
+		panel[TASC_failed] = false;
+		panel[TASC_power_M] = false;
+		panel[TASC_controling_M] = false;
+		panel[ATO_P] = 0;
+		panel[ATO_B] = 0;
+		panel[ATO_power] = true;
+		panel[ATO_controling] = false;
+		panel[TASC_debug] = 0;
+		panel[ATO_debug] = 0;
+		panel[Reservation] = false;
 		break;
 	case ATC_status::ATO_driving:
 		if (LimitSpeed - 0.5 < S.V) {	//Œ¸‘¬§Œä
@@ -66,11 +67,36 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 			}
 			control.P = 0;
 			control.B = 0;
-			isCSC = true;
+			//isCSC = true;
 			break;
 		}
 		break;
+
+	case ATC_status::TASC_ON:
+	case ATC_status::TASC_control:
+	case ATC_status::TASC_brake:
+	case ATC_status::TASC_waiting:
+		panel[Brake_notches] = manual.B;
+		panel[TASC_power] = true;
+		panel[TASC_release] = false;
+		panel[TASC_braking] = false;
+		panel[TASC_controling] = false;
+		panel[TASC_noches] = 0;
+		panel[TASC_failed] = false;
+		panel[TASC_power_M] = false;
+		panel[TASC_controling_M] = false;
+		panel[ATO_P] = 0;
+		panel[ATO_B] = 0;
+		panel[ATO_power] = false;
+		panel[ATO_controling] = false;
+		panel[TASC_debug] = 0;
+		panel[ATO_debug] = 0;
+		panel[Reservation] = false;
+		break;
+	case ATC_status::OFF:
+	case ATC_status::ON:
 	default:
+		panel[Brake_notches] = 0;
 		for (int i = 136; i < 150; i++) {
 			panel[i] = false;
 		}
@@ -116,7 +142,7 @@ void c_ATO::SignalChange() {
 void c_ATO::ChangeMode(int in) {
 	if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
 		if (Mode > 0 && Mode < 3) {
-			Mode += in;
+			Mode = Mode + in;
 			SignalChange();
 		}
 	}

@@ -20,6 +20,7 @@ const int SpeedLimit[256] = {0,0,0,0,0,0,0,0,0,0,0,5,10,15,20,25,30,35,40,45,50,
 
 enum ATC_status {
 	OFF = 0,	//SW=off
+	ON,	//SW=on but mascon_key=off
 
 	ATO_ON = 10,	//SW=ATO
 	ATO_driving,	//running
@@ -48,7 +49,7 @@ enum ATC_Beacon {
 
 
 enum ATC_Panel {
-	ATO_Brake = 67,	//
+	Brake_notches = 67,	//
 	TASC_power = 136,	//TASC灯
 	TASC_release,	//TASC解放灯
 	TASC_braking,	//TASC制御灯
