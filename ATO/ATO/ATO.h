@@ -7,14 +7,17 @@
 class c_ATO {
 public:
 	void Control(State, int *, int *);	//毎フレーム制御
-	void CSC();	//ATO定速
+	void CSC(void);	//ATO定速
 	bool Departure(void);	//出発ボタン判定
 	void SignalChange();	//現示変更
 	void ChangeMode(int);	//運転モード変更
+	void setPattern(Beacon); 	//
 
 	Hand control;	//ハンドル制御値
 	int Limit;	//目標速度
 private:
+	Beacon brake;	//現示下降事前減速
+	double location;
 	bool isCSC;	//ATO定速
 	int Mode = 1;	//ATO運転モード
 	int button_buf;	//ボタン押下時ラグ判定用

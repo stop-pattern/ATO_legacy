@@ -32,19 +32,21 @@ enum ATC_status {
 	TASC_ON = 20,	//SW=TASC
 	TASC_control,	//controling
 	TASC_brake,	//braking
+	TASC_stopping,	//stoppping
 	TASC_waiting,	//waiting for control
 };
 
 
 enum ATC_Beacon {
-	notice_force = 7,
-	notice_link = 31,
-	ORP = 12,
-	TASC_P4 = 21,
-	TASC_P3 = 22,
-	TASC_P2 = 23,
-	TASC_P1 = 24,
-	TASC_P0 = 25,
+	notice_force = 7,	//前方予告（強制）
+	notice_link = 31,	//前方予告（リアルタイム）
+	ORP = 12,	//ORP添線
+	TASC_P4 = 21,	//
+	TASC_P3 = 22,	//
+	TASC_P2 = 23,	//
+	TASC_P1 = 24,	//
+	TASC_P0 = 25,	//
+	TASC_passage = 256,	//TASC停通判定
 };
 
 

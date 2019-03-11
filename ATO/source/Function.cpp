@@ -38,12 +38,16 @@ void reload(void) {
 	case ATC_status::ATO_TASC_control:
 	case ATC_status::ATO_TASC_brake:
 		ATCstatus = ATC_status::ATO_waiting;
+		ATOstatus = ATC_status::ATO_waiting;
+		TASCstatus = ATC_status::TASC_waiting;
 		break;
 	case ATC_status::TASC_ON:
 	case ATC_status::TASC_control:
 	case ATC_status::TASC_brake:
 	case ATC_status::TASC_waiting:
 		ATCstatus = ATC_status::TASC_waiting;
+		ATOstatus = ATC_status::OFF;
+		TASCstatus = ATC_status::TASC_waiting;
 		break;
 	case ATC_status::OFF:
 	default:
@@ -58,11 +62,15 @@ void SetStatus(bool in) {
 			switch (MasCon_key) {
 			case Key::TRTA:
 				ATCstatus = ATC_status::ATO_ON;
+				ATOstatus = ATC_status::ATO_ON;
+				TASCstatus = ATC_status::ATO_ON;
 				break;
 			case Key::TOB:
 			case Key::TKK:
 			case Key::SEB:
 				ATCstatus = ATC_status::TASC_ON;
+				ATOstatus = ATC_status::OFF;
+				TASCstatus = ATC_status::TASC_ON;
 				break;
 			case Key::KeyOff:
 			case Key::SOT:
@@ -70,9 +78,13 @@ void SetStatus(bool in) {
 			case Key::OER:
 			case Key::TOY:
 				ATCstatus = ATC_status::ON;
+				ATOstatus = ATC_status::ON;
+				TASCstatus = ATC_status::ON;
 				break;
 			default:
-				ATCstatus = 0;
+				ATCstatus = ATC_status::OFF;
+				ATOstatus = ATC_status::OFF;
+				TASCstatus = ATC_status::OFF;
 				break;
 			}
 		}
@@ -83,7 +95,7 @@ void SetStatus(bool in) {
 }
 
 void setKey(int in) {
-	if (key_S == false) {
+	if (manual.P == 0 && manual.B == specific.E && manual.R == 0 && key_S == false) {
 		MasCon_key += in;
 		if (MasCon_key < 0) {
 			MasCon_key = 0;

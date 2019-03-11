@@ -56,8 +56,8 @@ DE void SC Initialize(int b) {
 }
 DE Hand SC Elapse(State S, int * panel, int * sound) {
 	accelaration = (S.V - Stat.V) / (S.T - Stat.T) * 1000;
-	MasCon_key;	// panel[92];
-	ATC_SW = panel[72];
+	//MasCon_key = panel[92];
+	//ATC_SW = panel[72];
 
 	handle.P = manual.P;
 	handle.B = manual.B;
@@ -79,19 +79,26 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	case ATC_status::ATO_waiting:
 	case ATC_status::ATO_TASC_control:
 	case ATC_status::ATO_TASC_brake:
-		if (manual.B == 0 || manual.P == 0) {
+		if (manual.B == 0 && manual.P == 0) {
 			handle.P = ATO.control.P;
+			panel[ATO_P] = ATO.control.P;
 		}
-		if (manual.P == 0 || manual.B < ATO.control.B) {
+		else {
+			ATO.control.P = 0;
+			panel[ATO_P] = 0;
+		}
+		if (manual.P == 0 && manual.B < ATO.control.B) {
 			handle.B = ATO.control.B;
+			panel[ATO_B] = ATO.control.B;
+		}
+		else {
+			panel[ATO_B] = 0;
 		}
 	case ATC_status::TASC_ON:
 	case ATC_status::TASC_control:
 	case ATC_status::TASC_brake:
-		if (TASC.control.P > handle.P) {
-			handle.P = TASC.control.P;
-		}
 		if (TASC.control.B > handle.B) {
+			handle.P = 0;
 			handle.B = TASC.control.B;
 		}
 		break;
@@ -104,9 +111,10 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 		panel[LimitSpeed / 5 + 102] = true;
 	}
-	panel[51] = handle.B;
+
+	handle.B == specific.E ? panel[51] = handle.B + 1 : panel[51] = handle.B;
 	panel[66] = handle.P;
-	panel[67] = manual.B;
+	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[92] = MasCon_key;
 	panel[135] = ATO.Limit * 10;
 
@@ -126,9 +134,13 @@ DE void SC DoorOpen() {
 	switch (ATCstatus / 10) {
 	case 1:	//ATO
 		ATCstatus = ATC_status::ATO_stopping;
+		ATOstatus = ATC_status::ATO_stopping;
+		TASCstatus = ATC_status::TASC_waiting;
 		break;
 	case 2:	//TASC
-		ATCstatus = ATC_status::TASC_waiting;
+		ATCstatus = ATC_status::TASC_stopping;
+		TASCstatus = ATC_status::TASC_stopping;
+		TASC.setStatus(false);
 		break;
 	default:
 		break;
@@ -259,7 +271,23 @@ DE void SC SetSignal(int a) {
 }
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {
-	case 0:
+	case ATC_Beacon::TASC_P0:
+		TASC.setBeacon(0, b);
+		break;
+	case ATC_Beacon::TASC_P1:
+		TASC.setBeacon(1, b);
+		break;
+	case ATC_Beacon::TASC_P2:
+		TASC.setBeacon(2, b);
+		break;
+	case ATC_Beacon::TASC_P3:
+		TASC.setBeacon(3, b);
+		break;
+	case ATC_Beacon::TASC_P4:
+		TASC.setBeacon(4, b);
+		break;
+	case ATC_Beacon::TASC_passage:
+		TASC.setBeacon(-1, b);
 	default:
 		break;
 	}

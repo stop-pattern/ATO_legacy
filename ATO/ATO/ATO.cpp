@@ -9,24 +9,19 @@
 
 void c_ATO::Control(State S, int * panel, int * sound) {
 
-	switch (ATCstatus) {
+	switch (ATOstatus) {
 	case ATC_status::ATO_stopping:
-		control.B = 4;
-		if (manual.B > 4) {
-			ATCstatus = ATC_status::ATO_waiting;
-		}
 	case ATC_status::ATO_ON:
 	case ATC_status::ATO_waiting:
-		if (Departure() == true) {
-			if (button_buf > 0)
-			{
+		control.P = 0;
+		ATOstatus == ATC_status::ATO_stopping ? control.B = 4 : control.B = 0;
+		if (Departure()) {
+			if (button_buf > 0) {
 
 			}
-			ATCstatus = ATC_status::ATO_driving;
+			ATOstatus = ATC_status::ATO_driving;
 			break;
 		}
-		control.P = 0;
-		control.B = 0;
 		panel[Brake_notches] = manual.B;
 		panel[TASC_power] = true;
 		panel[TASC_release] = false;
@@ -128,6 +123,8 @@ void c_ATO::CSC() {
 bool c_ATO::Departure() {
 	if (key_A1 == true && (key_A2 == true || key_B1 == true)) {
 		if (door == false && Stat.V == 0 && manual.B == 0 && manual.P == 0 && manual.R == 1 && LimitSpeed >= 25) {
+			control.P = 0;
+			control.B = 0;
 			return true;
 		}
 	}
@@ -140,10 +137,23 @@ void c_ATO::SignalChange() {
 
 
 void c_ATO::ChangeMode(int in) {
-	if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
-		if (Mode > 0 && Mode < 3) {
-			Mode = Mode + in;
-			SignalChange();
+	if (key_S == true) {
+		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
+			if (Mode > 0 && Mode < 3) {
+				Mode += in;
+				SignalChange();
+			}
+			else if (Mode >= 3) {
+				Mode = 3;
+			}
+			else
+			{
+				Mode = 1;
+			}
 		}
 	}
+}
+
+void c_ATO::setPattern(Beacon b) {
+	brake = b;
 }
