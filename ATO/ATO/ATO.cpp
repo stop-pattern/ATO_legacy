@@ -5,8 +5,6 @@
 #define ATO_LAG 500	//ƒ‰ƒO[ms]
 
 
-
-
 void c_ATO::Control(State S, int * panel, int * sound) {
 
 	switch (ATOstatus) {
@@ -97,6 +95,12 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 		}
 		break;
 	}
+
+	/*
+	if (abs(accelaration) > 10) {
+		handle.B = specific.E;	//
+	}
+	*/
 }
 
 
@@ -156,4 +160,11 @@ void c_ATO::ChangeMode(int in) {
 
 void c_ATO::setPattern(Beacon b) {
 	brake = b;
+}
+
+void c_ATO::inEmergency(void){
+	ATCstatus = ATC_status::ATO_ON;
+	this->control.P = 0;
+	this->control.B = 0;
+	this->isCSC = false;
 }

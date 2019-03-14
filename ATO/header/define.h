@@ -52,6 +52,7 @@ enum ATC_Beacon {
 
 enum ATC_Panel {
 	Brake_notches = 67,	//
+	notice = 133,	//前方予告
 	TASC_power = 136,	//TASC灯
 	TASC_release,	//TASC解放灯
 	TASC_braking,	//TASC制御灯
@@ -68,17 +69,40 @@ enum ATC_Panel {
 	ATO_debug,	//ATOパターン指針
 	Reservation,	//予約領域
 
+	TIS_send = 194,
+	TIS_recieve_VVVF_0,
+	TIS_recieve_VVVF_1,
+	TIS_recieve_VVVF_2,
+	TIS_recieve_VVVF_3,
+	TIS_recieve_VVVF_4,
+	TIS_recieve_VVVF_5,
+	
+	TIS_recieve_brake_01 = 207,
+	TIS_recieve_brake_02,
+	TIS_recieve_brake_11,
+	TIS_recieve_brake_12 = 215,
+	TIS_recieve_brake_21,
+	TIS_recieve_brake_22,
+	TIS_recieve_brake_31,
+	TIS_recieve_brake_32,
+	TIS_recieve_brake_41,
+	TIS_recieve_brake_42,
+	TIS_recieve_brake_51,
+	TIS_recieve_brake_52,
+	TIS_recieve_brake_61,
+	TIS_recieve_brake_62,
+	TIS_recieve_brake_71,
+	TIS_recieve_brake_72,
+	TIS_recieve_brake_81,
+	TIS_recieve_brake_82,
+	TIS_recieve_brake_91,
+	TIS_recieve_brake_92
 };
 
 
 enum ATC_Sound {
-	ATC_bell = 5,	//ATC単打ベル
-	ATC10_notice = 9,	//前方予告
-	ATC10_ORP = 18,	//ORPピープ
-	ATC10_bell = 19,	//車警ベル
-	ATS_trance = 26,	//ATS切換完了
-	ATC_trance = 28,	//ATC切換完了
-	RATC_bell = 50,	//R-ATCベル
+	ATC_bell = 2,	//ATC単打ベル
+	ATC_notice = 4,	//前方予告
 };
 
 

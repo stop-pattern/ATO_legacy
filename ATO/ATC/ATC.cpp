@@ -1,18 +1,62 @@
+#include "../header/define.h"
+#include "../header/Header.h"
 #include "ATC.h"
 
 void c_ATC::Control(State S, int * panel, int * sound) {
-	if (limit + 2 < S.V) {
-		control.B;
+	if (changeSignal == true && signal > 9 && signal < 36) {
+		for (size_t i = 101; i < 131; i++) {
+			panel[i] = false;
+		}
+		panel[LimitSpeed / 5 + 102] = true;
+		sound[ATC_Sound::ATC_bell] = SoundInfo::PlayOnce;
+	}
+	else {
+		sound[ATC_Sound::ATC_bell] = SoundInfo::PlayContinue;
+	}
+
+	if (this->isNotice && (S.T - this->notice_time) / FORWARDNOTICE % 2) {
+		panel[ATC_Panel::notice] = true;
+		panel[this->notice_panel] = true;
+	}
+	else {
+		panel[ATC_Panel::notice] = false;
+		panel[this->notice_panel] = false;
+	}
+
+	if (!this->isBrake) {
 		this->brake_cnt = S.T;
+	}
+
+	if (limit + 2 < S.V) {
+		this->isBrake = true;
+		this->control.B = int(specific.E / 2);
+		if (limit + 5 < S.V) {
+			if (S.T - brake_cnt > BRAKE_HALF) {
+				control.B = specific.B;
+				this->brake_cnt = S.T;
+			}
+		}
 	}
 	else {
 		if (S.T - brake_cnt < BRAKE_HALF) {
-			this->control.B = int(specific.E / 2);
+			control.B = int(specific.E / 2);
 		}
 		else control.B = 0;
 	}
+	changeSignal = false;
 }
 
 void c_ATC::setSignal(int a) {
+	this->isNotice = false;
 	this->limit = SpeedLimit[a];
+	this->changeSignal = true;
 }
+
+void c_ATC::notice(int sig, int param) {
+	if (sig != signal || param == true) {
+		this->isNotice = true;
+		this->notice_panel = sig - 10 + 102;
+		this->notice_time = Stat.T;
+	}
+}
+

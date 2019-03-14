@@ -7,6 +7,7 @@
 #include "ats.h"
 #include "../ATO/ATO.h"
 #include "../TASC/TASC.h"
+#include "../ATC/ATC.h"
 
 #define LAG	200	//判定ラグ[ms]
 
@@ -39,6 +40,7 @@ extern Hand handle;	//ハンドル制御値
 
 extern c_ATO ATO;	//ATO
 extern c_TASC TASC;	//TASC
+extern c_ATC ATC;	//ATC
 
 void GetPath(HMODULE hModule);
 void reload(void);	//駅ジャンプ時再読み込み処理

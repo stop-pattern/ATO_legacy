@@ -63,14 +63,16 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	handle.B = manual.B;
 	handle.R = manual.R;
 
-	if (S.T - lag_cnt >= LAG) {
-		ATO.Control(S, panel, sound);
-		lag_cnt = S.T;
+
+	if (MasCon_key != Key::KeyOff) {
+		ATC.Control(S, panel, sound);
+		if (S.T - lag_cnt >= LAG) {
+			ATO.Control(S, panel, sound);
+			TASC.Control(S, panel, sound);
+			lag_cnt = S.T;
+		}
 	}
 
-	if (accelaration > 7.5) {
-		//	handle.B = specific.E;
-	}
 
 	switch (ATCstatus) {
 	case ATC_status::ATO_ON:
@@ -105,18 +107,16 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	default:
 		break;
 	}
-	if (signal > 9 && signal < 36) {
-		for (size_t i = 101; i < 131; i++) {
-			panel[i] = false;
-		}
-		panel[LimitSpeed / 5 + 102] = true;
-	}
+
 
 	handle.B == specific.E ? panel[51] = handle.B + 1 : panel[51] = handle.B;
 	panel[66] = handle.P;
 	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[92] = MasCon_key;
 	panel[135] = ATO.Limit * 10;
+
+	//ATC_B
+	ATC.control.B == specific.E ? panel[51] = ATC.control.B + 1 : panel[51] = ATC.control.B;
 
 	Stat = S;
 	return handle;
@@ -126,18 +126,32 @@ DE void SC SetPower(int p) {
 }
 DE void SC SetBrake(int b) {
 	manual.B = b;
+	if (b == specific.E) {
+		ATO.inEmergency();
+	}
 }
 DE void SC SetReverser(int r) {
 	manual.R = r;
 }
 DE void SC DoorOpen() {
-	switch (ATCstatus / 10) {
-	case 1:	//ATO
+	switch (ATCstatus) {
+	case ATC_status::ATO_ON:
+	case ATC_status::ATO_stopping:
+	case ATC_status::ATO_waiting:
+		break;
+	case ATC_status::ATO_driving:
+	case ATC_status::ATO_TASC_control:
+	case ATC_status::ATO_TASC_brake:
 		ATCstatus = ATC_status::ATO_stopping;
 		ATOstatus = ATC_status::ATO_stopping;
 		TASCstatus = ATC_status::TASC_waiting;
 		break;
-	case 2:	//TASC
+	case ATC_status::TASC_ON:
+	case ATC_status::TASC_stopping:
+	case ATC_status::TASC_waiting:
+		break;
+	case ATC_status::TASC_control:
+	case ATC_status::TASC_brake:
 		ATCstatus = ATC_status::TASC_stopping;
 		TASCstatus = ATC_status::TASC_stopping;
 		TASC.setStatus(false);
@@ -268,9 +282,16 @@ DE void SC SetSignal(int a) {
 	LimitSpeed = SpeedLimit[a];
 
 	ATO.SignalChange();
+	ATC.setSignal(a);
 }
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {
+	case ATC_Beacon::notice_force:
+	case ATC_Beacon::notice_link:
+		ATC.notice(b.Sig, b.Data);
+		break;
+	case ATC_Beacon::ORP:
+		break;
 	case ATC_Beacon::TASC_P0:
 		TASC.setBeacon(0, b);
 		break;

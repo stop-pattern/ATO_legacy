@@ -14,7 +14,7 @@ Index	Contents	Details	Value	Caution
 	→正：加速/負：減速	100：自動進段/99：非常B||P最大	abs(option)=output(ATO)
 
 
-<Panel>予約領域は無記入
+<Panel>
 67	ブレーキノッチ表示灯		切0、常用1～7、非常8(ATO連動)
 136	TASC電源	ATO/TASCモードorTASCモード時点灯	TASC
 137	TASC解放	panel136点灯中かつパターン解放運転(P生成後K(D09)押下)中点灯。P4踏んでreset	TASC解放
@@ -30,7 +30,7 @@ Index	Contents	Details	Value	Caution
 147	ATO動作		
 148	TASCパターン指針	路線作者デバッグ用	
 149	ATOパターン指針	路線作者デバッグ用	
-150	
+150	予約領域
 
 
 <KeyAssignment>

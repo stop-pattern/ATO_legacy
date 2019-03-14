@@ -2,6 +2,7 @@
 #include "../header/Header.h"
 #include "../ATO/ATO.h"
 #include"../TASC/TASC.h"
+#include "../ATC/ATC.h"
 
 string dllPath;	//.dllのpath
 string iniPath;	//.iniのpath
@@ -29,3 +30,4 @@ Hand handle;	//ハンドル制御値
 
 c_ATO ATO;	//ATO
 c_TASC TASC;	//TASC
+c_ATC ATC;	//ATC

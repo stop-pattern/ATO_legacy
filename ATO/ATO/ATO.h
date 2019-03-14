@@ -11,7 +11,8 @@ public:
 	bool Departure(void);	//出発ボタン判定
 	void SignalChange();	//現示変更
 	void ChangeMode(int);	//運転モード変更
-	void setPattern(Beacon); 	//
+	void setPattern(Beacon); 	//地上子入力
+	void inEmergency(void);	//非常入力
 
 	Hand control;	//ハンドル制御値
 	int Limit;	//目標速度
