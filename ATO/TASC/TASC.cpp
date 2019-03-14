@@ -5,6 +5,7 @@
 
 void c_TASC::Control(State S, int * panel, int * sound) {
 	control.P = 0;
+	panel[ATC_Panel::TASC_braking] = false;
 	switch (TASCstatus) {
 	case ATC_status::TASC_stopping:
 		control.B = 4;
@@ -15,7 +16,8 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 		break;
 	case ATC_status::TASC_control:
 	case ATC_status::TASC_brake:
-
+		panel[ATC_Panel::TASC_braking] = true;
+		panel[ATC_Panel::TASC_controling] = true;
 		break;
 	case ATC_status::TASC_ON:
 		if (S.V != 0) {

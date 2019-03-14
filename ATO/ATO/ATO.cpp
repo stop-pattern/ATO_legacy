@@ -40,7 +40,7 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 		panel[Reservation] = false;
 		break;
 	case ATC_status::ATO_driving:
-		if (LimitSpeed - 0.5 < S.V) {	//Œ¸‘¬§Œä
+		if (LimitSpeed + 1 < S.V) {	//Œ¸‘¬§Œä
 			if (control.B < specific.B) {
 				if (rand() % 2) {
 					control.B += 1;
