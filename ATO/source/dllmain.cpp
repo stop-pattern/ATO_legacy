@@ -76,7 +76,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 	switch (ATCstatus) {
 	case ATC_status::ATO_ON:
-	case ATC_status::ATO_driving:
+	case ATC_status::ATO_control:
 	case ATC_status::ATO_stopping:
 	case ATC_status::ATO_waiting:
 	case ATC_status::ATO_TASC_control:
@@ -98,7 +98,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 	case ATC_status::TASC_ON:
 	case ATC_status::TASC_control:
-	case ATC_status::TASC_brake:
+	case ATC_status::TASC_doing:
 		if (TASC.control.B > handle.B) {
 			handle.P = 0;
 			handle.B = TASC.control.B;
@@ -139,7 +139,7 @@ DE void SC DoorOpen() {
 	case ATC_status::ATO_stopping:
 	case ATC_status::ATO_waiting:
 		break;
-	case ATC_status::ATO_driving:
+	case ATC_status::ATO_control:
 	case ATC_status::ATO_TASC_control:
 	case ATC_status::ATO_TASC_brake:
 		ATCstatus = ATC_status::ATO_stopping;
@@ -151,7 +151,7 @@ DE void SC DoorOpen() {
 	case ATC_status::TASC_waiting:
 		break;
 	case ATC_status::TASC_control:
-	case ATC_status::TASC_brake:
+	case ATC_status::TASC_doing:
 		ATCstatus = ATC_status::TASC_stopping;
 		TASCstatus = ATC_status::TASC_stopping;
 		TASC.setStatus(false);

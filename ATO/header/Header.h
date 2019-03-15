@@ -23,8 +23,6 @@ extern double distance;	//現在位置
 
 extern bool door;	//ドア状態
 extern int ATCstatus;	//ATC状態
-extern int ATOstatus;	//ATO状態
-extern int TASCstatus;	//TASC状態
 extern int LimitSpeed;	//制限速度
 extern double accelaration;	//加減速度[km/h/s]
 extern bool key_S, key_A1, key_A2, key_B1, key_B2, key_C1, key_C2, key_D, key_E, key_F, key_G, key_H, key_I, key_J, key_K, key_L;	//ATSkey

@@ -30,28 +30,15 @@ void GetPath(HMODULE hModule) {
 }
 
 void reload(void) {
-	switch (ATCstatus) {
-	case ATC_status::ATO_ON:
-	case ATC_status::ATO_driving:
-	case ATC_status::ATO_stopping:
-	case ATC_status::ATO_waiting:
-	case ATC_status::ATO_TASC_control:
-	case ATC_status::ATO_TASC_brake:
-		ATCstatus = ATC_status::ATO_waiting;
-		ATOstatus = ATC_status::ATO_waiting;
-		TASCstatus = ATC_status::TASC_waiting;
-		break;
-	case ATC_status::TASC_ON:
-	case ATC_status::TASC_control:
-	case ATC_status::TASC_brake:
-	case ATC_status::TASC_waiting:
-		ATCstatus = ATC_status::TASC_waiting;
-		ATOstatus = ATC_status::OFF;
-		TASCstatus = ATC_status::TASC_waiting;
-		break;
-	case ATC_status::OFF:
-	default:
-		break;
+	if (ATCstatus & ATC_status::ATO_ON)	{
+		ATCstatus |= ATC_status::ATO_stopping;
+		ATCstatus &= ~ATC_status::ATO_control;
+		ATCstatus &= ~ATC_status::ATO_doing;
+	}
+	if (ATCstatus & ATC_status::TASC_ON)	{
+		ATCstatus |= ATC_status::TASC_stopping;
+		ATCstatus &= ~ATC_status::TASC_control;
+		ATCstatus &= ~ATC_status::TASC_doing;
 	}
 }
 
@@ -59,32 +46,23 @@ void reload(void) {
 void SetStatus(bool in) {
 	if (in) {
 		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
+			ATCstatus = ATC_status::OFF;
 			switch (MasCon_key) {
 			case Key::TRTA:
-				ATCstatus = ATC_status::ATO_ON;
-				ATOstatus = ATC_status::ATO_ON;
-				TASCstatus = ATC_status::ATO_ON;
-				break;
+				ATCstatus |= ATC_status::ATO_ON;
 			case Key::TOB:
 			case Key::TKK:
 			case Key::SEB:
-				ATCstatus = ATC_status::TASC_ON;
-				ATOstatus = ATC_status::OFF;
-				TASCstatus = ATC_status::TASC_ON;
-				break;
+				ATCstatus |= ATC_status::TASC_ON;
+			case Key::TOY:
+				ATCstatus |= ATC_status::ATC_ON;
 			case Key::KeyOff:
 			case Key::SOT:
 			case Key::JNR:
 			case Key::OER:
-			case Key::TOY:
-				ATCstatus = ATC_status::ON;
-				ATOstatus = ATC_status::ON;
-				TASCstatus = ATC_status::ON;
+				ATCstatus |= ATC_status::ON;
 				break;
 			default:
-				ATCstatus = ATC_status::OFF;
-				ATOstatus = ATC_status::OFF;
-				TASCstatus = ATC_status::OFF;
 				break;
 			}
 		}
@@ -95,7 +73,7 @@ void SetStatus(bool in) {
 }
 
 void setKey(int in) {
-	if (manual.P == 0 && manual.B == specific.E && manual.R == 0 && key_S == false) {
+	if (Stat.V == 0 && manual.P == 0 && manual.B == specific.E && manual.R == 0 && key_S == false) {
 		MasCon_key += in;
 		if (MasCon_key < 0) {
 			MasCon_key = 0;

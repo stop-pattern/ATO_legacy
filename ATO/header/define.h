@@ -19,21 +19,34 @@ const int SpeedLimit[256] = {0,0,0,0,0,0,0,0,0,0,0,5,10,15,20,25,30,35,40,45,50,
 
 
 enum ATC_status {
-	OFF = 0,	//SW=off
-	ON,	//SW=on but mascon_key=off
+	OFF = 0x0000,	//SW=off
+	ON = 0x8000,	//SW=on but mascon_key=off
 
-	ATO_ON = 10,	//SW=ATO
-	ATO_driving,	//running
-	ATO_stopping,	//stopping
-	ATO_waiting,	//waiting for depature
-	ATO_TASC_control,	//TASC controling
-	ATO_TASC_brake,	//TASC braking
+	ATC_ON = 0x0800,
+	ATC_brake = 0x0400,
 
-	TASC_ON = 20,	//SW=TASC
-	TASC_control,	//controling
-	TASC_brake,	//braking
-	TASC_stopping,	//stoppping
-	TASC_waiting,	//waiting for control
+	ATO_OFF = 0x0000,	//SW!=ATO
+	ATO_ON = 0x0080,	//SW==ATO
+	ATO_control = 0x0040,	//controling
+	ATO_doing = 0x0020,
+	ATO_stopping = 0x0010,	//stopping & brake
+
+	TASC_OFF = 0x0000,	//SW!=TASC
+	TASC_ON = 0x0008,	//SW==TASC
+	TASC_control = 0x0004,	//controling
+	TASC_doing = 0x0002,	//braking
+	TASC_stopping = 0x0001,	//stoppping & brake
+
+	/*
+	0b0000
+	  ||||
+	  ABCD
+
+		A:ON/OFF	0x8
+		B:control	0x4
+		C:doing		0x2
+		D:parking	0x1
+	*/
 };
 
 
