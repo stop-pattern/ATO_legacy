@@ -108,11 +108,11 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 	}
 
-	handle.B == specific.E ? panel[51] = handle.B + 1 : panel[51] = handle.B;
+	panel[51] = handle.B == specific.E ? handle.B + 1 : handle.B;
 	panel[66] = handle.P;
 	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[92] = MasCon_key;
-	panel[135] = ATC.limit * 10;	//ATO.Limit * 10;
+	panel[135] = TASC.Limit * 10;
 
 	//ATC_B
 	ATC.control.B == specific.E ? panel[51] = ATC.control.B + 1 : panel[51] = ATC.control.B;
@@ -127,6 +127,7 @@ DE void SC SetBrake(int b) {
 	manual.B = b;
 	if (b == specific.E) {
 		ATO.inEmergency();
+		TASC.inEmergency();
 	}
 }
 DE void SC SetReverser(int r) {

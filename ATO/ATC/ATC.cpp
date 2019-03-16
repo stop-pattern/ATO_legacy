@@ -27,10 +27,10 @@ void c_ATC::Control(State S, int * panel, int * sound) {
 		this->brake_cnt = S.T;
 	}
 
-	if (limit + 2 < S.V) {
+	if (Limit + 2 < S.V) {
 		ATCstatus |= ATC_status::ATC_brake;
 		this->control.B = int(specific.E / 2);
-		if (limit + 5 < S.V) {
+		if (Limit + 5 < S.V) {
 			if (S.T - brake_cnt > BRAKE_HALF) {
 				control.B = specific.B;
 			}
@@ -45,7 +45,7 @@ void c_ATC::Control(State S, int * panel, int * sound) {
 
 void c_ATC::setSignal() {
 	this->isNotice = false;
-	this->limit = SpeedLimit[signal];
+	this->Limit = SpeedLimit[signal];
 	this->changeSignal = true;
 }
 

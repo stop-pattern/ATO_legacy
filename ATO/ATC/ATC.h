@@ -12,7 +12,7 @@ public:
 	void setSignal(void);	//信号設定
 	Hand control;
 	void notice(int, int);	//前方予告
-	int limit;	//制限速度
+	int Limit;	//制限速度
 private:
 	long int brake_cnt;	//ハーフブレーキ用カウンタ
 	bool changeSignal;	//現示変化

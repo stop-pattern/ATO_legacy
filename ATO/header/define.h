@@ -43,10 +43,10 @@ enum ATC_status {
 	  ||||
 	  ABCD
 
-		A:ON/OFF	0x8
-		B:control	0x4
-		C:doing		0x2
-		D:parking	0x1
+		A:ON/OFF	0x8	0b1000
+		B:control	0x4	0b0100
+		C:doing		0x2	0b0010
+		D:parking	0x1	0b0001
 	*/
 };
 
