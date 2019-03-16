@@ -6,26 +6,54 @@
 void c_TASC::Control(State S, int * panel, int * sound) {
 	control.P = 0;
 	panel[ATC_Panel::TASC_braking] = false;
-	switch (TASCstatus) {
-	case ATC_status::TASC_stopping:
-		control.B = 4;
-		if (manual.B > control.B) {
-			control.B = 0;
-			TASCstatus = ATC_status::TASC_waiting;
+	if (ATCstatus & ATC_status::TASC_ON) {
+		panel[TASC_power] = true;
+		panel[TASC_release] = false;
+		panel[TASC_braking] = false;
+		panel[TASC_controling] = false;
+		panel[TASC_noches] = 0;
+		panel[TASC_failed] = false;
+		panel[TASC_power_M] = false;
+		panel[TASC_controling_M] = false;
+		panel[TASC_debug] = 0;
+		if (ATCstatus & ATC_status::TASC_control) {
+			if (/*--!Œ¸‘¬”»’è--*/false) {
+				if (sqrt(0 - S.Z * DECELERATION_BRAKE)) {
+					control.B++;
+				}
+				else if (1) {
+
+				}
+				else {
+
+				}
+				ATCstatus |= ATC_status::TASC_doing;
+				control.B++;
+				if (S.V < 2.5 && 1) {
+					ATCstatus |= ATC_status::TASC_stopping;
+					ATCstatus &= ~ATC_status::TASC_control;
+					ATCstatus &= ~ATC_status::TASC_doing;
+				}
+			}
 		}
-		break;
-	case ATC_status::TASC_control:
-	case ATC_status::TASC_brake:
-		panel[ATC_Panel::TASC_braking] = true;
-		panel[ATC_Panel::TASC_controling] = true;
-		break;
-	case ATC_status::TASC_ON:
-		if (S.V != 0) {
-			TASCstatus = ATC_status::TASC_waiting;
+		if (ATCstatus & ATC_status::TASC_stopping) {
+			control.B = 4;
+			if (manual.B > control.B) {
+				control.B = 0;
+				ATCstatus &= ~ATC_status::TASC_stopping;
+			}
 		}
-	case ATC_status::TASC_waiting:
-	default:
-		break;
+	}
+	else {
+		panel[TASC_power] = false;
+		panel[TASC_release] = false;
+		panel[TASC_braking] = false;
+		panel[TASC_controling] = false;
+		panel[TASC_noches] = 0;
+		panel[TASC_failed] = false;
+		panel[TASC_power_M] = false;
+		panel[TASC_controling_M] = false;
+		panel[TASC_debug] = 0;
 	}
 
 }
@@ -41,8 +69,12 @@ void c_TASC::setBeacon(int index, Beacon b) {
 }
 
 void c_TASC::setStatus(bool in) {
-	isControling = in;
-	if (in == false) {
+	if (in == true) {
+		ATCstatus |= ATC_status::TASC_control;
+	}
+	else {
+		ATCstatus &= ~ATC_status::TASC_control;
+		ATCstatus &= ~ATC_status::TASC_doing;
 		for (size_t i = 0; i < 5; i++) {
 			for (size_t j = 0; j < 3; j++) {
 				P[i][j].Data = 0;

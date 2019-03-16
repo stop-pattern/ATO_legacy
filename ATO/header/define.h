@@ -22,6 +22,7 @@ enum ATC_status {
 	OFF = 0x0000,	//SW=off
 	ON = 0x8000,	//SW=on but mascon_key=off
 
+	ATC_OFF = 0x0000,
 	ATC_ON = 0x0800,
 	ATC_brake = 0x0400,
 

@@ -73,14 +73,8 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 	}
 
-
-	switch (ATCstatus) {
-	case ATC_status::ATO_ON:
-	case ATC_status::ATO_control:
-	case ATC_status::ATO_stopping:
-	case ATC_status::ATO_waiting:
-	case ATC_status::ATO_TASC_control:
-	case ATC_status::ATO_TASC_brake:
+	//ATO動作
+	if (ATCstatus & ATC_status::ATO_control) {
 		if (manual.B == 0 && manual.P == 0) {
 			handle.P = ATO.control.P;
 			panel[ATO_P] = ATO.control.P;
@@ -96,24 +90,29 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		else {
 			panel[ATO_B] = 0;
 		}
-	case ATC_status::TASC_ON:
-	case ATC_status::TASC_control:
-	case ATC_status::TASC_doing:
+	}
+
+	//TASC動作
+	if (ATCstatus & ATC_status::TASC_doing) {
 		if (TASC.control.B > handle.B) {
 			handle.P = 0;
 			handle.B = TASC.control.B;
 		}
-		break;
-	default:
-		break;
 	}
 
+	//ATCブレーキ
+	if (ATCstatus & ATC_status::ATC_brake) {
+		if (ATC.control.B > manual.B) {
+			handle.P = 0;
+			handle.B = ATC.control.B;
+		}
+	}
 
 	handle.B == specific.E ? panel[51] = handle.B + 1 : panel[51] = handle.B;
 	panel[66] = handle.P;
 	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[92] = MasCon_key;
-	panel[135] = ATO.Limit * 10;
+	panel[135] = ATC.limit * 10;	//ATO.Limit * 10;
 
 	//ATC_B
 	ATC.control.B == specific.E ? panel[51] = ATC.control.B + 1 : panel[51] = ATC.control.B;
@@ -134,32 +133,23 @@ DE void SC SetReverser(int r) {
 	manual.R = r;
 }
 DE void SC DoorOpen() {
-	switch (ATCstatus) {
-	case ATC_status::ATO_ON:
-	case ATC_status::ATO_stopping:
-	case ATC_status::ATO_waiting:
-		break;
-	case ATC_status::ATO_control:
-	case ATC_status::ATO_TASC_control:
-	case ATC_status::ATO_TASC_brake:
-		ATCstatus = ATC_status::ATO_stopping;
-		ATOstatus = ATC_status::ATO_stopping;
-		TASCstatus = ATC_status::TASC_waiting;
-		break;
-	case ATC_status::TASC_ON:
-	case ATC_status::TASC_stopping:
-	case ATC_status::TASC_waiting:
-		break;
-	case ATC_status::TASC_control:
-	case ATC_status::TASC_doing:
-		ATCstatus = ATC_status::TASC_stopping;
-		TASCstatus = ATC_status::TASC_stopping;
-		TASC.setStatus(false);
-		break;
-	default:
-		break;
-	}
 	door = true;
+	if (ATCstatus & ATC_status::ATC_ON)	{
+		ATC.control.B = specific.E;
+		ATO.SignalChange();
+		ATC.setSignal();
+	}
+	if (ATCstatus & ATC_status::ATO_ON) {
+		ATCstatus &= ~ATC_status::ATO_control;
+		ATCstatus &= ~ATC_status::ATO_doing;
+		ATCstatus |= ATC_status::ATO_stopping;
+	}
+	if (ATCstatus & ATC_status::TASC_ON) {
+		ATCstatus &= ~ATC_status::TASC_control;
+		ATCstatus &= ~ATC_status::TASC_doing;
+		ATCstatus |= ATC_status::TASC_stopping;
+		TASC.setStatus(false);
+	}
 }
 DE void SC DoorClose() {
 	door = false;
@@ -282,7 +272,7 @@ DE void SC SetSignal(int a) {
 	LimitSpeed = SpeedLimit[a];
 
 	ATO.SignalChange();
-	ATC.setSignal(a);
+	ATC.setSignal();
 }
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {

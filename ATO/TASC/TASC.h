@@ -11,7 +11,6 @@ public:
 	void setBeacon(int, Beacon);	//beacon set
 	void setStatus(bool);	//status set
 private:
-	bool isControling;	//êßå‰îªíË
 	Beacon P[5][3];	//TASCínè„éq
 	Beacon passage;	//í‚í îªíË
 };
