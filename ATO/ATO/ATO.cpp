@@ -6,51 +6,36 @@
 
 
 void c_ATO::Control(State S, int * panel, int * sound) {
-
-	if (ATCstatus & ATC_status::ATO_ON) {
 		if (ATCstatus & ATC_status::ATO_stopping) {
 			this->control.P = 0;
 			this->control.B = 4;
 		}
 
+		//î≠é‘îªíË
 		if (this->Departure()) {
 			ATCstatus |= ATC_status::ATO_control;
 		}
-		else {
-			panel[Brake_notches] = manual.B;
-			panel[TASC_power] = true;
-			panel[TASC_release] = false;
-			panel[TASC_braking] = false;
-			panel[TASC_controling] = false;
-			panel[TASC_noches] = 0;
-			panel[TASC_failed] = false;
-			panel[TASC_power_M] = false;
-			panel[TASC_controling_M] = false;
-			panel[ATO_P] = 0;
-			panel[ATO_B] = 0;
-			panel[ATO_power] = true;
-			panel[ATO_controling] = false;
-			panel[TASC_debug] = 0;
-			panel[ATO_debug] = 0;
-			panel[Reservation] = false;
-		}
 
+		//ATOêßå‰
 		if (ATCstatus & ATC_status::ATO_control) {
-			if (LimitSpeed + 1 < S.V) {	//å∏ë¨êßå‰
+			//å∏ë¨êßå‰
+			if (LimitSpeed + 1 < S.V) {
 				if (this->control.B < specific.B) {
 					if (rand() % 2) {
 						this->control.B += 1;
 					}
 				}
 			}
-			else if (this->Limit > S.V) {	//â¡ë¨êßå‰
+			//â¡ë¨êßå‰
+			else if (this->Limit > S.V) {
 				if (this->control.P < specific.P) {
 					if (rand() % 2) {
 						this->control.P += 1;
 					}
 				}
 			}
-			else {	//ëƒçsêßå‰
+			//ëƒçsêßå‰
+			else {
 				if (this->isCSC) {	//ATOíËë¨
 					this->CSC();
 				}
@@ -59,12 +44,6 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 				//isCSC = true;
 			}
 		}
-	}
-	else {
-		for (int i = 136; i < 150; i++) {
-			panel[i] = false;
-		}
-	}
 	
 	/*
 	if (abs(accelaration) > 10) {

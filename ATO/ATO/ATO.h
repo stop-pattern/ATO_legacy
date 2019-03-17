@@ -15,7 +15,7 @@ public:
 	void inEmergency(void);	//非常入力
 
 	Hand control;	//ハンドル制御値
-	int Limit;	//目標速度
+	double Limit;	//目標速度
 private:
 	Beacon brake;	//現示下降事前減速
 	double location;

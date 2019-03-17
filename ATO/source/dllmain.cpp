@@ -73,38 +73,82 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 	}
 
-	//ATO動作
-	if (ATCstatus & ATC_status::ATO_control) {
-		if (manual.B == 0 && manual.P == 0) {
-			handle.P = ATO.control.P;
-			panel[ATO_P] = ATO.control.P;
-		}
-		else {
-			ATO.control.P = 0;
-			panel[ATO_P] = 0;
-		}
-		if (manual.P == 0 && manual.B < ATO.control.B) {
-			handle.B = ATO.control.B;
-			panel[ATO_B] = ATO.control.B;
-		}
-		else {
-			panel[ATO_B] = 0;
-		}
-	}
+	//ATO
+	if (ATCstatus & ATC_status::ATO_ON) {
 
-	//TASC動作
-	if (ATCstatus & ATC_status::TASC_doing) {
-		if (TASC.control.B > handle.B) {
-			handle.P = 0;
-			handle.B = TASC.control.B;
+		//ATO動作
+		if (ATCstatus & ATC_status::ATO_control) {
+			if (manual.B == 0 && manual.P == 0) {
+				handle.P = ATO.control.P;
+				panel[ATC_Panel::ATO_P] = ATO.control.P + 1;
+				panel[ATC_Panel::ATO_controling] = true;
+			}
+			else {
+				ATO.control.P = 0;
+				panel[ATC_Panel::ATO_P] = 0;
+			}
+			if (manual.P == 0 && manual.B < ATO.control.B) {
+				handle.B = ATO.control.B;
+				panel[ATC_Panel::ATO_B] = ATO.control.B + 1;
+			}
+			else {
+				panel[ATC_Panel::ATO_B] = 0;
+			}
 		}
 	}
+	else {
+		panel[ATC_Panel::Brake_notches] = manual.B;
+		panel[ATC_Panel::ATO_P] = 0;
+		panel[ATC_Panel::ATO_B] = 0;
+		panel[ATC_Panel::ATO_power] = false;
+		panel[ATC_Panel::ATO_controling] = false;
+	}
+	panel[ATC_Panel::ATO_debug] = int(ATO.Limit);
+
+
+	//TASC
+	if (ATCstatus & ATC_status::TASC_ON) {
+		panel[TASC_release] = false;
+		panel[TASC_braking] = false;
+		panel[TASC_noches] = 0;
+		panel[TASC_failed] = false;
+		MasCon_key == Key::SEB ? panel[TASC_power_M] = true : panel[TASC_power] = true;
+
+		if (ATCstatus & ATC_status::TASC_control) {
+			MasCon_key == Key::SEB ? panel[TASC_controling_M] = true : panel[TASC_controling] = false;
+
+			//TASC動作
+			if (ATCstatus & ATC_status::TASC_doing) {
+				if (TASC.control.B > handle.B) {
+					handle.P = 0;
+					handle.B = TASC.control.B;
+					panel[ATC_Panel::TASC_noches] = TASC.control.B + 1;
+				}
+			}
+		}
+	}
+	else {
+		panel[TASC_power] = false;
+		panel[TASC_release] = false;
+		panel[TASC_braking] = false;
+		panel[TASC_controling] = false;
+		panel[TASC_noches] = 0;
+		panel[TASC_failed] = false;
+		panel[TASC_power_M] = false;
+		panel[TASC_controling_M] = false;
+	}
+	panel[TASC_debug] = int(TASC.Limit);
+
 
 	//ATCブレーキ
-	if (ATCstatus & ATC_status::ATC_brake) {
-		if (ATC.control.B > manual.B) {
-			handle.P = 0;
-			handle.B = ATC.control.B;
+	if (ATCstatus & ATC_status::ATC_ON) {
+		panel[ATC_Panel::ATC_braking] = false;
+		if (ATCstatus & ATC_status::ATC_brake) {
+			if (ATC.control.B > manual.B) {
+				handle.P = 0;
+				handle.B = ATC.control.B;
+				panel[ATC_Panel::ATC_braking] = true;
+			}
 		}
 	}
 
@@ -112,7 +156,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	panel[66] = handle.P;
 	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[92] = MasCon_key;
-	panel[135] = TASC.Limit * 10;
+	panel[135] = int(TASC.Limit * 10);
 
 	//ATC_B
 	ATC.control.B == specific.E ? panel[51] = ATC.control.B + 1 : panel[51] = ATC.control.B;
@@ -135,7 +179,7 @@ DE void SC SetReverser(int r) {
 }
 DE void SC DoorOpen() {
 	door = true;
-	if (ATCstatus & ATC_status::ATC_ON)	{
+	if (ATCstatus & ATC_status::ATC_ON) {
 		ATC.control.B = specific.E;
 		ATO.SignalChange();
 		ATC.setSignal();
@@ -170,6 +214,9 @@ DE void SC KeyDown(int k) {
 		break;
 	case ATSKeys::B1:
 		key_B1 = true;
+		break;
+	case ATSKeys::B2:
+		key_B2 = true;
 		break;
 	case ATSKeys::C1:
 		key_C1 = true;
@@ -227,6 +274,9 @@ DE void SC KeyUp(int k) {
 		break;
 	case ATSKeys::B1:
 		key_B1 = false;
+		break;
+	case ATSKeys::B2:
+		key_B2 = false;
 		break;
 	case ATSKeys::C1:
 		key_C1 = false;

@@ -7,19 +7,12 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 	control.P = 0;
 	panel[ATC_Panel::TASC_braking] = false;
 	if (ATCstatus & ATC_status::TASC_ON) {
-		panel[TASC_power] = true;
-		panel[TASC_release] = false;
-		panel[TASC_braking] = false;
-		panel[TASC_controling] = false;
-		panel[TASC_noches] = 0;
-		panel[TASC_failed] = false;
-		panel[TASC_power_M] = false;
-		panel[TASC_controling_M] = false;
-		panel[TASC_debug] = 0;
-
+		//PÝ’è
 		this->Distance = this->Location - S.Z;
 		this->Limit = sqrt(this->Distance * DECELERATION_BRAKE);
 
+
+		//B”»’è
 		if (ATCstatus & ATC_status::TASC_control) {
 			ATCstatus |= ATC_status::TASC_doing;
 			if (this->Limit * 1.1 < S.V) {
@@ -42,6 +35,9 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 
 			}
 		}
+
+
+		//“]“®–hŽ~B
 		if (ATCstatus & ATC_status::TASC_stopping) {
 			control.B = 4;
 			if (manual.B > control.B) {
@@ -50,18 +46,6 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 			}
 		}
 	}
-	else {
-		panel[TASC_power] = false;
-		panel[TASC_release] = false;
-		panel[TASC_braking] = false;
-		panel[TASC_controling] = false;
-		panel[TASC_noches] = 0;
-		panel[TASC_failed] = false;
-		panel[TASC_power_M] = false;
-		panel[TASC_controling_M] = false;
-		panel[TASC_debug] = 0;
-	}
-
 }
 
 void c_TASC::setBeacon(int index, Beacon b) {

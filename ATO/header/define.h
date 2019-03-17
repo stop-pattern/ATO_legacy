@@ -65,7 +65,9 @@ enum ATC_Beacon {
 
 
 enum ATC_Panel {
-	Brake_notches = 67,	//
+	ATC_emergency = 22,
+	ATC_braking,
+	Brake_notches = 67,	//ATC/ATO/TASC
 	notice = 133,	//前方予告
 	TASC_power = 136,	//TASC灯
 	TASC_release,	//TASC解放灯

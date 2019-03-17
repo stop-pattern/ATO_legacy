@@ -3,6 +3,7 @@
 #include "ATC.h"
 
 void c_ATC::Control(State S, int * panel, int * sound) {
+	//ATC現示・ベル
 	if (changeSignal == true && signal > 9 && signal < 36) {
 		for (size_t i = 101; i < 131; i++) {
 			panel[i] = false;
@@ -14,6 +15,8 @@ void c_ATC::Control(State S, int * panel, int * sound) {
 		sound[ATC_Sound::ATC_bell] = SoundInfo::PlayContinue;
 	}
 
+
+	//前方予告
 	if (this->isNotice && (S.T - this->notice_time) / FORWARDNOTICE % 2) {
 		panel[ATC_Panel::notice] = true;
 		panel[this->notice_panel] = true;
@@ -23,6 +26,8 @@ void c_ATC::Control(State S, int * panel, int * sound) {
 		panel[this->notice_panel] = false;
 	}
 
+
+	//速度照査
 	if (!(ATCstatus & ATC_status::ATC_brake)) {
 		this->brake_cnt = S.T;
 	}
@@ -40,6 +45,8 @@ void c_ATC::Control(State S, int * panel, int * sound) {
 		control.B = 0;
 		ATCstatus &= ~ATC_status::ATC_brake;
 	}
+
+
 	changeSignal = false;
 }
 
@@ -50,7 +57,7 @@ void c_ATC::setSignal() {
 }
 
 void c_ATC::notice(int sig, int param) {
-	if (sig != signal || param == true) {
+	if (sig != signal || param != 0) {
 		this->isNotice = true;
 		this->notice_panel = sig - 10 + 102;
 		this->notice_time = Stat.T;

@@ -79,7 +79,22 @@ enum InitialPosition	//ハンドルの初期位置設定
 };
 enum ATSKeys	//キー押下情報
 {
-	S, A1, A2, B1, B2, C1, C2, D, E, F, G, H, I, J, K, L
+	S,	//space
+	A1,	//home
+	A2,	//end
+	B1,	//insert
+	B2,	//delete
+	C1,	//page up
+	C2,	//page down
+	D,	//2
+	E,	//3
+	F,	//4
+	G,	//5
+	H,	//6
+	I,	//7
+	J,	//8
+	K,	//9
+	L,	//0
 };
 
 
