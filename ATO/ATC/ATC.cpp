@@ -2,13 +2,14 @@
 #include "../header/Header.h"
 #include "ATC.h"
 
-void c_ATC::Control(State S, int * panel, int * sound) {
+void c_ATC::Control(State S, int * panel, int * sound) {/*
 	if (this->isNoSignal){
 		this->Limit = 0;
 		this->control.B = 0;
-		
+		panel[101] = true;
 	}
-	else {
+	else {*/
+		panel[101] = false;
 		//ATCŒ»Ž¦Eƒxƒ‹
 		if (changeSignal == true && signal > 9 && signal < 36) {
 			for (size_t i = 101; i < 131; i++) {
@@ -53,12 +54,15 @@ void c_ATC::Control(State S, int * panel, int * sound) {
 		}
 
 		changeSignal = false;
-	}
+	//}
 }
 
 void c_ATC::setSignal() {
 	if (signal <= 9 || signal >= 36)	{
 		this->set02();
+	}
+	else	{
+		this->isNoSignal = false;
 	}
 	this->isNotice = false;
 	this->Limit = SpeedLimit[signal];

@@ -23,7 +23,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	LPVOID lpReserved
 )
 {
-	INI.getIni(GetPath(hModule));
+	INI.getIni(INI.GetPath(hModule));
 
 	switch (ul_reason_for_call)
 	{
@@ -155,11 +155,12 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 	}
 
-	panel[51] = handle.B == specific.E ? handle.B + 1 : handle.B;
-	panel[66] = handle.P;
+	panel[ATC_Panel::Brake_notches] = handle.B == specific.E ? handle.B + 1 : handle.B;
+	panel[ATC_Panel::Brake_notches_unic] = handle.B == specific.E ? handle.B + 1 : handle.B;
+	panel[ATC_Panel::Power_notches] = handle.P;
 	panel[ATC_Panel::Brake_notches] = handle.B;
-	panel[92] = MasCon_key;
-	panel[135] = int(TASC.Limit * 10);
+	panel[ATC_Panel::Master_Controller_key] = MasCon_key;
+	panel[ATC_Panel::ORP_speed] = int(TASC.Limit * 10);
 
 	//ATC_B
 	ATC.control.B == specific.E ? panel[51] = ATC.control.B + 1 : panel[51] = ATC.control.B;

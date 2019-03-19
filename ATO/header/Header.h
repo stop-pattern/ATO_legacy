@@ -37,7 +37,6 @@ extern c_TASC TASC;	//TASC
 extern c_ATC ATC;	//ATC
 extern c_INI INI;	//INI
 
-string GetPath(HMODULE hModule);
 void reload(void);	//駅ジャンプ時再読み込み処理
 void SetStatus(bool);
 void setKey(int);

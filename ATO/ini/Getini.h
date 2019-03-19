@@ -7,9 +7,9 @@ using namespace std;
 class c_INI {
 public:
 	//variant
-	isATC;
-	isATO;
-	isTASC;
+	bool isATC;
+	bool isATO;
+	bool isTASC;
 
 	//function
 	void getIni(string);

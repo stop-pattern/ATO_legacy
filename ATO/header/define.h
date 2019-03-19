@@ -63,10 +63,15 @@ enum ATC_Beacon {
 
 
 enum ATC_Panel {
-	ATC_emergency = 22,
-	ATC_braking,
-	Brake_notches = 67,	//全指令総合B段数(ATC/ATO/TASC)
+	ATC_emergency = 22,	//ATC非常
+	ATC_braking,	//ATC常用
+	Brake_notches = 51,	//全指令総合B段数(ATC/ATO/TASC)	切0,常用1-7,非常9
+	Power_notches = 66,	//全指令総合P段数(ATC/ATO)
+	Brake_notches_unic = 67,	//全指令総合B段数(ATC/ATO/TASC)
+	TASC_SW = 73,	//TASC切替スイッチ	切<=>ATO/TASC
+	Master_Controller_key = 92,	//マスコンキー
 	notice = 133,	//前方予告
+	ORP_speed = 135,	//ORP
 	TASC_power = 136,	//TASC灯
 	TASC_release,	//TASC解放灯
 	TASC_braking,	//TASC制御灯
