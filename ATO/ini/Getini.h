@@ -1,15 +1,21 @@
 ﻿#pragma once
 #include "../header/define.h"
+#include "Getini.h"
 
+using namespace std;
 
-class ImportConfig {
-	public:
-
+class c_INI {
+public:
 	//variant
-	int brake_div[PATTERN_BRAKE];
-	int handle_div;
+	isATC;
+	isATO;
+	isTASC;
 
 	//function
-	void GetIni(string);
+	void getIni(string);
+	string GetPath(HMODULE);
 
+private:
+	string dllPath;	//.dllのpath
+	string iniPath;	//.iniのpath
 };

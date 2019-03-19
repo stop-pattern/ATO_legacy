@@ -22,6 +22,9 @@
     <Filter Include="ATC">
       <UniqueIdentifier>{f9ccac34-03bd-4466-b49d-a5f5d3e5cac6}</UniqueIdentifier>
     </Filter>
+    <Filter Include="INI">
+      <UniqueIdentifier>{77cd4791-ac8f-4957-a50e-f55be8589da6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="header\Header.h">
@@ -45,6 +48,9 @@
     <ClInclude Include="TASC\TASC.h">
       <Filter>TASC</Filter>
     </ClInclude>
+    <ClInclude Include="INI\Getini.h">
+      <Filter>INI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\dllmain.cpp">
@@ -67,6 +73,9 @@
     </ClCompile>
     <ClCompile Include="header\define.cpp">
       <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="INI\Getini.cpp">
+      <Filter>INI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,26 +1,64 @@
-﻿#include "Getini.h"
+﻿#ifndef _INI_
+#define _INI_
+
 
 #include <Windows.h>
 #include <string>
+
+#include "Getini.h"
+
 using namespace std;
 
-void ImportConfig::GetIni(string p) {
+
+string c_INI::GetPath(HMODULE hModule) {
+	//initialize
+	LPSTR FilePath;//	 = _T("");
+	char buf[100];
+	FilePath = &buf[0];	//initialize by null <= ?
+	string drive, dir, fname, ext;	//part of char
+	int drive_i, path_i, ext_i;	//char's long
+
+	GetModuleFileNameA(hModule, FilePath, MAX_PATH);
+	this->dllPath = string(FilePath);
+	//_splitpath(&fpath, &drive, &dir, &fname, &ext);//パス名を構成要素に分解
+
+	drive_i = this->dllPath.find_first_of("\\");
+	path_i = this->dllPath.find_last_of("\\") + 1;
+	ext_i = this->dllPath.find_last_of(".");
+
+	drive = this->dllPath.substr(0, drive_i);
+	dir = this->dllPath.substr(drive_i, path_i - drive_i);
+	fname = this->dllPath.substr(path_i, ext_i - path_i);
+	ext = this->dllPath.substr(ext_i, this->dllPath.size() - ext_i);
+
+	
+	this ->iniPath = drive + dir + fname + ".ini";
+
+	return iniPath;
+}
+
+
+void c_INI::getIni(string p) {
 	LPCTSTR path = p.c_str();
 
-	for (int i = 0; i >= PATTERN_BRAKE; i++) {
-		int def = 100 / PATTERN_BRAKE * i;
-		brake_div[i] = GetPrivateProfileInt("brake_div", LPCTSTR(i), def, path);
-	}
-
-	handle_div = GetPrivateProfileInt("handle_div", "value", 10, path);
-	brake_div[0] = 1;
-	brake_div[1] = 2;
-	brake_div[2] = 3;
-	brake_div[3] = 4;
-	brake_div[4] = 5;
 
 	/*--Getini--*/
+	
+	
+	
+	//int example = GetPrivateProfileInt("section", "key", default, path);
 
+	/*
+	// --- <filename>.ini ---
+	[section]
+	key = value
+	*/
+
+	/*
+	if (*section == nullptr || *key == nullptr)	{
+		example = default;
+	}
+	*/
 }
 
 /*
@@ -55,3 +93,5 @@ DWORD GetPrivateProfileSection(
 
 
 */
+
+#endif // !_INI_

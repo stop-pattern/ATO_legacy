@@ -119,6 +119,7 @@
     <ClInclude Include="header\ats.h" />
     <ClInclude Include="header\define.h" />
     <ClInclude Include="header\Header.h" />
+    <ClInclude Include="INI\Getini.h" />
     <ClInclude Include="resource\resource.h" />
     <ClInclude Include="TASC\TASC.h" />
   </ItemGroup>
@@ -126,6 +127,7 @@
     <ClCompile Include="ATC\ATC.cpp" />
     <ClCompile Include="ATO\ATO.cpp" />
     <ClCompile Include="header\define.cpp" />
+    <ClCompile Include="INI\Getini.cpp" />
     <ClCompile Include="source\dllmain.cpp" />
     <ClCompile Include="source\Function.cpp" />
     <ClCompile Include="source\Source.cpp" />

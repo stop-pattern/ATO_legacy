@@ -13,6 +13,7 @@
 #include "../ATO/ATO.h"
 #include "../TASC/TASC.h"
 #include "../ATC/ATC.h"
+#include "../INI/Getini.h"
 
 #include <fstream>
 
@@ -22,7 +23,7 @@ BOOL APIENTRY DllMain(HMODULE hModule,
 	LPVOID lpReserved
 )
 {
-	GetPath(hModule);
+	INI.getIni(GetPath(hModule));
 
 	switch (ul_reason_for_call)
 	{
