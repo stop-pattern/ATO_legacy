@@ -30,15 +30,38 @@ void GetPath(HMODULE hModule) {
 }
 
 void reload(void) {
-	if (ATCstatus & ATC_status::ATO_ON)	{
-		ATCstatus |= ATC_status::ATO_stopping;
-		ATCstatus &= ~ATC_status::ATO_control;
-		ATCstatus &= ~ATC_status::ATO_doing;
+	if (signal > 9 || signal < 36)	{
+		int sig = signal;	//一時記憶
+		SetSignal(0);
+		if (ATCstatus & ATC_status::ATC_ON) {
+			ATCstatus &= ~ATC_status::ATC_brake;
+		}
+		if (ATCstatus & ATC_status::ATO_ON) {
+			ATCstatus |= ATC_status::ATO_stopping;
+			ATCstatus &= ~ATC_status::ATO_control;
+			ATCstatus &= ~ATC_status::ATO_doing;
+		}
+		if (ATCstatus & ATC_status::TASC_ON) {
+			ATCstatus |= ATC_status::TASC_stopping;
+			ATCstatus &= ~ATC_status::TASC_control;
+			ATCstatus &= ~ATC_status::TASC_doing;
+		}
+		SetSignal(sig);
 	}
-	if (ATCstatus & ATC_status::TASC_ON)	{
-		ATCstatus |= ATC_status::TASC_stopping;
-		ATCstatus &= ~ATC_status::TASC_control;
-		ATCstatus &= ~ATC_status::TASC_doing;
+	else {
+		if (ATCstatus & ATC_status::ATC_ON) {
+			ATCstatus &= ~ATC_status::ATC_brake;
+		}
+		if (ATCstatus & ATC_status::ATO_ON) {
+			ATCstatus |= ATC_status::ATO_stopping;
+			ATCstatus &= ~ATC_status::ATO_control;
+			ATCstatus &= ~ATC_status::ATO_doing;
+		}
+		if (ATCstatus & ATC_status::TASC_ON) {
+			ATCstatus |= ATC_status::TASC_stopping;
+			ATCstatus &= ~ATC_status::TASC_control;
+			ATCstatus &= ~ATC_status::TASC_doing;
+		}
 	}
 }
 

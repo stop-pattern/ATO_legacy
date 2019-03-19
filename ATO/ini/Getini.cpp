@@ -18,6 +18,9 @@ void ImportConfig::GetIni(string p) {
 	brake_div[2] = 3;
 	brake_div[3] = 4;
 	brake_div[4] = 5;
+
+	/*--Getini--*/
+
 }
 
 /*

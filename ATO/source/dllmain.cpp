@@ -65,16 +65,14 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 
 	if (MasCon_key != Key::KeyOff) {
-		ATC.Control(S, panel, sound);
 		if (S.T - lag_cnt >= LAG) {
-			ATO.Control(S, panel, sound);
-			TASC.Control(S, panel, sound);
 			lag_cnt = S.T;
 		}
 	}
 
 	//ATO
 	if (ATCstatus & ATC_status::ATO_ON) {
+		ATO.Control(S, panel, sound);	//制御関数
 
 		//ATO動作
 		if (ATCstatus & ATC_status::ATO_control) {
@@ -108,6 +106,8 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 	//TASC
 	if (ATCstatus & ATC_status::TASC_ON) {
+		TASC.Control(S, panel, sound);	//制御関数
+
 		panel[TASC_release] = false;
 		panel[TASC_braking] = false;
 		panel[TASC_noches] = 0;
@@ -142,6 +142,8 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 	//ATCブレーキ
 	if (ATCstatus & ATC_status::ATC_ON) {
+		ATC.Control(S, panel, sound);	//制御関数
+
 		panel[ATC_Panel::ATC_braking] = false;
 		if (ATCstatus & ATC_status::ATC_brake) {
 			if (ATC.control.B > manual.B) {
@@ -180,7 +182,7 @@ DE void SC SetReverser(int r) {
 DE void SC DoorOpen() {
 	door = true;
 	if (ATCstatus & ATC_status::ATC_ON) {
-		ATC.control.B = specific.E;
+		//ATC.control.B = specific.E;
 		ATO.SignalChange();
 		ATC.setSignal();
 	}
@@ -193,7 +195,7 @@ DE void SC DoorOpen() {
 		ATCstatus &= ~ATC_status::TASC_control;
 		ATCstatus &= ~ATC_status::TASC_doing;
 		ATCstatus |= ATC_status::TASC_stopping;
-		TASC.setStatus(false);
+		TASC.setStatus(false);	//TASC制御解放
 	}
 }
 DE void SC DoorClose() {
