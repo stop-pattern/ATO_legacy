@@ -18,6 +18,7 @@ bool key_S, key_A1, key_A2, key_B1, key_B2, key_C1, key_C2, key_D, key_E, key_F,
 int MasCon_key;	//マスコンキー
 int ATC_SW;	//ATC切り替えSW
 int lag_cnt;	//ラグ用カウンター
+bool isLoad;	//ラグ制御伝達用
 
 Spec specific;	//車両性能
 State Stat;	//車両状態(前フレーム)

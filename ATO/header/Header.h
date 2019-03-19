@@ -26,6 +26,7 @@ extern bool key_S, key_A1, key_A2, key_B1, key_B2, key_C1, key_C2, key_D, key_E,
 extern int MasCon_key;	//マスコンキー
 extern int ATC_SW;	//ATC切り替えSW
 extern int lag_cnt;	//ラグ用カウンター
+extern bool isLoad;	//ラグ制御伝達用
 
 extern Spec specific;	//車両性能
 extern State Stat;	//車両状態(前フレーム)

@@ -67,13 +67,19 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 	if (MasCon_key != Key::KeyOff) {
 		if (S.T - lag_cnt >= LAG) {
+			isLoad = true;
 			lag_cnt = S.T;
+		}
+		else {
+			isLoad = false;
 		}
 	}
 
 	//ATO
 	if (ATCstatus & ATC_status::ATO_ON) {
-		ATO.Control(S, panel, sound);	//制御関数
+		if(isLoad){
+			ATO.Control(S, panel, sound);	//制御関数
+		}
 
 		//ATO動作
 		if (ATCstatus & ATC_status::ATO_control) {
@@ -107,7 +113,9 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 	//TASC
 	if (ATCstatus & ATC_status::TASC_ON) {
-		TASC.Control(S, panel, sound);	//制御関数
+		if (isLoad) {
+			TASC.Control(S, panel, sound);	//制御関数
+		}
 
 		panel[TASC_release] = false;
 		panel[TASC_braking] = false;
@@ -184,7 +192,7 @@ DE void SC SetReverser(int r) {
 DE void SC DoorOpen() {
 	door = true;
 	if (ATCstatus & ATC_status::ATC_ON) {
-		//ATC.control.B = specific.E;
+		//ATC.control.B = specific.E;	//？
 		ATO.SignalChange();
 		ATC.setSignal();
 	}
