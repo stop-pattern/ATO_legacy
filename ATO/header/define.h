@@ -18,7 +18,7 @@ const int SpeedLimit[256] = {0,0,0,0,0,0,0,0,0,0,0,5,10,15,20,25,30,35,40,45,50,
 
 enum ATC_status {
 	OFF = 0x0000,	//SW=off
-	ON = 0x8000,	//SW=on but mascon_key=off
+	ON = 0x8000,	//SW=on
 
 	ATC_OFF = 0x0000,
 	ATC_ON = 0x0800,

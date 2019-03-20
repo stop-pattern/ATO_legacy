@@ -39,7 +39,7 @@ extern c_ATC ATC;	//ATC
 extern c_INI INI;	//INI
 
 void reload(void);	//駅ジャンプ時再読み込み処理
-void SetStatus(bool);
-void setKey(int);
+void SetStatus();	//ATO/TASCスイッチ操作
+void setKey(int);	//マスコンキー操作
 
 #endif // !HEADER

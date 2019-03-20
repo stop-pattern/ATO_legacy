@@ -5,7 +5,7 @@
 #include "../header/Header.h"
 
 
-
+//駅ジャンプ時再読み込み処理
 void reload(void) {/*
 	if (signal > 9 || signal < 36) {
 		int sig = signal;	//一時記憶
@@ -42,9 +42,9 @@ void reload(void) {/*
 	}*/
 }
 
-
-void SetStatus(bool in) {
-	if (in) {
+//ATO/TASCスイッチ操作
+void SetStatus() {
+	if (ATCstatus & ATC_status::ON) {
 		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
 			ATCstatus &= ATC_status::ATC_ON;	//ATC情報以外を消去
 			switch (MasCon_key) {
@@ -59,7 +59,6 @@ void SetStatus(bool in) {
 			case Key::SOT:
 			case Key::JNR:
 			case Key::OER:
-				ATCstatus |= ATC_status::ON;
 				break;
 			default:
 				break;
@@ -67,12 +66,15 @@ void SetStatus(bool in) {
 		}
 	}
 	else {
-		ATCstatus = ATC_status::OFF;
+		ATCstatus &= ATC_status::ATC_ON;
+		ATCstatus &= ~ATC_status::ON;
 	}
 }
 
+//マスコンキー操作
 void setKey(int in) {
 	if (Stat.V == 0 && manual.P == 0 && manual.B == specific.E && manual.R == 0 && key_S == false) {
+		ATCstatus &= ATC_status::ON;
 		MasCon_key += in;
 		if (MasCon_key < 0) {
 			MasCon_key = 0;
@@ -83,7 +85,7 @@ void setKey(int in) {
 		if ((MasCon_key >= 1 && MasCon_key <= 4) || MasCon_key == 8) {
 			ATCstatus |= ATC_status::ATC_ON;
 		}
-		else ATCstatus &= ATC_status::ATC_ON;	//ATC情報以外を消去
-		ATCstatus == ATC_status::OFF ? SetStatus(false) : SetStatus(true);
+		else ATCstatus &= ~ATC_status::ATC_ON;	//ATC情報以外を消去
+		SetStatus();
 	}
 }

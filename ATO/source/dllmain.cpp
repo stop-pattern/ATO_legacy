@@ -238,28 +238,30 @@ DE void SC KeyDown(int k) {
 		key_D = true;
 		break;
 	case ATSKeys::E:
-		ATO.ChangeMode(-1);
 		key_E = true;
+		ATO.ChangeMode(-1);
 		break;
 	case ATSKeys::F:
-		ATO.ChangeMode(+1);
 		key_F = true;
+		ATO.ChangeMode(+1);
 		break;
 	case ATSKeys::G:
-		SetStatus(false);
 		key_G = true;
+		ATCstatus &= ~ATC_status::ON;
+		SetStatus();
 		break;
 	case ATSKeys::H:
-		SetStatus(true);
 		key_H = true;
+		ATCstatus |= ATC_status::ON;
+		SetStatus();
 		break;
 	case ATSKeys::I:
-		setKey(-1);
 		key_I = true;
+		setKey(-1);
 		break;
 	case ATSKeys::J:
-		setKey(+1);
 		key_J = true;
+		setKey(+1);
 		break;
 	case ATSKeys::K:
 		key_K = true;
