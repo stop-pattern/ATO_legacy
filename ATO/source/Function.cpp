@@ -46,7 +46,7 @@ void reload(void) {/*
 void SetStatus(bool in) {
 	if (in) {
 		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
-			ATCstatus = ATC_status::OFF;
+			ATCstatus &= ATC_status::ATC_ON;	//ATC情報以外を消去
 			switch (MasCon_key) {
 			case Key::TRTA:
 				ATCstatus |= ATC_status::ATO_ON;
@@ -83,7 +83,7 @@ void setKey(int in) {
 		if ((MasCon_key >= 1 && MasCon_key <= 4) || MasCon_key == 8) {
 			ATCstatus |= ATC_status::ATC_ON;
 		}
-		else ATCstatus = ATC_status::OFF;
+		else ATCstatus &= ATC_status::ATC_ON;	//ATC情報以外を消去
 		ATCstatus == ATC_status::OFF ? SetStatus(false) : SetStatus(true);
 	}
 }
