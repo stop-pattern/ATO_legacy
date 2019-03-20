@@ -6,7 +6,7 @@
 
 
 
-void reload(void) {
+void reload(void) {/*
 	if (signal > 9 || signal < 36) {
 		int sig = signal;	//一時記憶
 		SetSignal(0);
@@ -39,7 +39,7 @@ void reload(void) {
 			ATCstatus &= ~ATC_status::TASC_control;
 			ATCstatus &= ~ATC_status::TASC_doing;
 		}
-	}
+	}*/
 }
 
 
@@ -83,6 +83,7 @@ void setKey(int in) {
 		if ((MasCon_key >= 1 && MasCon_key <= 4) || MasCon_key == 8) {
 			ATCstatus |= ATC_status::ATC_ON;
 		}
+		else ATCstatus = ATC_status::OFF;
 		ATCstatus == ATC_status::OFF ? SetStatus(false) : SetStatus(true);
 	}
 }

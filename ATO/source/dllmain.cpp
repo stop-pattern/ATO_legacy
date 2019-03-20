@@ -168,10 +168,8 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	panel[ATC_Panel::Power_notches] = handle.P;
 	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[ATC_Panel::Master_Controller_key] = MasCon_key;
-	panel[ATC_Panel::ORP_speed] = int(TASC.Limit * 10);
+	panel[ATC_Panel::ORP_speed] = int(TASC.Limit * 10);	//debug
 
-	//ATC_B
-	ATC.control.B == specific.E ? panel[51] = ATC.control.B + 1 : panel[51] = ATC.control.B;
 
 	Stat = S;
 	return handle;
