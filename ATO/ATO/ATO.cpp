@@ -6,18 +6,18 @@
 
 
 void c_ATO::Control(State S, int * panel, int * sound) {
-		if (ATCstatus & ATC_status::ATO_stopping) {
+		if (ATCstatus & ATC_Status::ATO_stopping) {
 			this->control.P = 0;
 			this->control.B = 4;
 		}
 
 		//î≠é‘îªíË
 		if (this->Departure()) {
-			ATCstatus |= ATC_status::ATO_control;
+			ATCstatus |= ATC_Status::ATO_control;
 		}
 
 		//ATOêßå‰
-		if (ATCstatus & ATC_status::ATO_control) {
+		if (ATCstatus & ATC_Status::ATO_control) {
 			//å∏ë¨êßå‰
 			if (LimitSpeed + 1 < S.V) {
 				if (this->control.B < specific.B) {
@@ -111,8 +111,8 @@ void c_ATO::setPattern(Beacon b) {
 }
 
 void c_ATO::inEmergency(void) {
-	ATCstatus &= ~ATC_status::ATO_control;
-	ATCstatus &= ~ATC_status::ATO_doing;
+	ATCstatus &= ~ATC_Status::ATO_control;
+	ATCstatus &= ~ATC_Status::ATO_doing;
 	this->control.P = 0;
 	this->control.B = 0;
 	this->isCSC = false;

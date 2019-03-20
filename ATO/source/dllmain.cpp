@@ -76,13 +76,15 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	}
 
 	//ATO
-	if (ATCstatus & ATC_status::ATO_ON) {
-		if(isLoad){
+	if (ATCstatus & ATC_Status::ATO_ON) {
+		if (isLoad) {
 			ATO.Control(S, panel, sound);	//制御関数
 		}
 
 		//ATO動作
-		if (ATCstatus & ATC_status::ATO_control) {
+		if (ATCstatus & ATC_Status::ATO_control) {
+			panel[ATC_Panel::ATO_power] = true;
+
 			if (manual.B == 0 && manual.P == 0) {
 				handle.P = ATO.control.P;
 				panel[ATC_Panel::ATO_P] = ATO.control.P + 1;
@@ -92,6 +94,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 				ATO.control.P = 0;
 				panel[ATC_Panel::ATO_P] = 0;
 			}
+
 			if (manual.P == 0 && manual.B < ATO.control.B) {
 				handle.B = ATO.control.B;
 				panel[ATC_Panel::ATO_B] = ATO.control.B + 1;
@@ -112,7 +115,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 
 	//TASC
-	if (ATCstatus & ATC_status::TASC_ON) {
+	if (ATCstatus & ATC_Status::TASC_ON) {
 		if (isLoad) {
 			TASC.Control(S, panel, sound);	//制御関数
 		}
@@ -123,11 +126,11 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		panel[TASC_failed] = false;
 		MasCon_key == Key::SEB ? panel[TASC_power_M] = true : panel[TASC_power] = true;
 
-		if (ATCstatus & ATC_status::TASC_control) {
+		if (ATCstatus & ATC_Status::TASC_control) {
 			MasCon_key == Key::SEB ? panel[TASC_controling_M] = true : panel[TASC_controling] = false;
 
 			//TASC動作
-			if (ATCstatus & ATC_status::TASC_doing) {
+			if (ATCstatus & ATC_Status::TASC_doing) {
 				if (TASC.control.B > handle.B) {
 					handle.P = 0;
 					handle.B = TASC.control.B;
@@ -150,11 +153,11 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 
 	//ATCブレーキ
-	if (ATCstatus & ATC_status::ATC_ON) {
+	if (ATCstatus & ATC_Status::ATC_ON) {
 		ATC.Control(S, panel, sound);	//制御関数
 
 		panel[ATC_Panel::ATC_braking] = false;
-		if (ATCstatus & ATC_status::ATC_brake) {
+		if (ATCstatus & ATC_Status::ATC_brake) {
 			if (ATC.control.B > manual.B) {
 				handle.P = 0;
 				handle.B = ATC.control.B;
@@ -189,20 +192,20 @@ DE void SC SetReverser(int r) {
 }
 DE void SC DoorOpen() {
 	door = true;
-	if (ATCstatus & ATC_status::ATC_ON) {
+	if (ATCstatus & ATC_Status::ATC_ON) {
 		//ATC.control.B = specific.E;	//？
 		ATO.SignalChange();
 		ATC.setSignal();
 	}
-	if (ATCstatus & ATC_status::ATO_ON) {
-		ATCstatus &= ~ATC_status::ATO_control;
-		ATCstatus &= ~ATC_status::ATO_doing;
-		ATCstatus |= ATC_status::ATO_stopping;
+	if (ATCstatus & ATC_Status::ATO_ON) {
+		ATCstatus &= ~ATC_Status::ATO_control;
+		ATCstatus &= ~ATC_Status::ATO_doing;
+		ATCstatus |= ATC_Status::ATO_stopping;
 	}
-	if (ATCstatus & ATC_status::TASC_ON) {
-		ATCstatus &= ~ATC_status::TASC_control;
-		ATCstatus &= ~ATC_status::TASC_doing;
-		ATCstatus |= ATC_status::TASC_stopping;
+	if (ATCstatus & ATC_Status::TASC_ON) {
+		ATCstatus &= ~ATC_Status::TASC_control;
+		ATCstatus &= ~ATC_Status::TASC_doing;
+		ATCstatus |= ATC_Status::TASC_stopping;
 		TASC.setStatus(false);	//TASC制御解放
 	}
 }
@@ -247,13 +250,17 @@ DE void SC KeyDown(int k) {
 		break;
 	case ATSKeys::G:
 		key_G = true;
-		ATCstatus &= ~ATC_status::ON;
-		SetStatus();
+		if (key_S) {
+			ATCstatus &= ~ATC_Status::ON;
+			SetStatus();
+		}
 		break;
 	case ATSKeys::H:
 		key_H = true;
-		ATCstatus |= ATC_status::ON;
-		SetStatus();
+		if (key_S) {
+			ATCstatus |= ATC_Status::ON;
+			SetStatus();
+		}
 		break;
 	case ATSKeys::I:
 		key_I = true;

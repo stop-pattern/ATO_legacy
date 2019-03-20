@@ -35,12 +35,12 @@ void c_ATC::Control(State S, int * panel, int * sound) {/*
 
 
 		//‘¬“xÆ¸
-		if (!(ATCstatus & ATC_status::ATC_brake)) {
+		if (!(ATCstatus & ATC_Status::ATC_brake)) {
 			this->brake_cnt = S.T;
 		}
 
 		if (Limit + 2 < S.V) {
-			ATCstatus |= ATC_status::ATC_brake;
+			ATCstatus |= ATC_Status::ATC_brake;
 			this->control.B = int(specific.E / 2);
 			if (Limit + 5 < S.V) {
 				if (S.T - brake_cnt > BRAKE_HALF) {
@@ -50,7 +50,7 @@ void c_ATC::Control(State S, int * panel, int * sound) {/*
 		}
 		else {
 			control.B = 0;
-			ATCstatus &= ~ATC_status::ATC_brake;
+			ATCstatus &= ~ATC_Status::ATC_brake;
 		}
 
 		changeSignal = false;
