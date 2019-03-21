@@ -38,13 +38,12 @@ void c_ATC::Control(State S, int * panel, int * sound) {/*
 		if (!(ATCstatus & ATC_Status::ATC_brake)) {
 			this->brake_cnt = S.T;
 		}
-
 		if (Limit + 2 < S.V) {
 			ATCstatus |= ATC_Status::ATC_brake;
 			this->control.B = int(specific.E / 2);
 			if (Limit + 5 < S.V) {
 				if (S.T - brake_cnt > BRAKE_HALF) {
-					control.B = specific.B;
+					this->control.B = specific.B;
 				}
 			}
 		}

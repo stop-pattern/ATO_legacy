@@ -77,13 +77,14 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 
 	//ATO
 	if (ATCstatus & ATC_Status::ATO_ON) {
+		panel[ATC_Panel::ATO_power] = true;
+
 		if (isLoad) {
 			ATO.Control(S, panel, sound);	//制御関数
 		}
 
 		//ATO動作
 		if (ATCstatus & ATC_Status::ATO_control) {
-			panel[ATC_Panel::ATO_power] = true;
 
 			if (manual.B == 0 && manual.P == 0) {
 				handle.P = ATO.control.P;
@@ -156,20 +157,20 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	if (ATCstatus & ATC_Status::ATC_ON) {
 		ATC.Control(S, panel, sound);	//制御関数
 
-		panel[ATC_Panel::ATC_braking] = false;
 		if (ATCstatus & ATC_Status::ATC_brake) {
 			if (ATC.control.B > manual.B) {
 				handle.P = 0;
 				handle.B = ATC.control.B;
 				panel[ATC_Panel::ATC_braking] = true;
 			}
+			else panel[ATC_Panel::ATC_braking] = false;
 		}
+		else panel[ATC_Panel::ATC_braking] = false;
 	}
 
 	panel[ATC_Panel::Brake_notches] = handle.B == specific.E ? handle.B + 1 : handle.B;
 	panel[ATC_Panel::Brake_notches_unic] = handle.B == specific.E ? handle.B + 1 : handle.B;
 	panel[ATC_Panel::Power_notches] = handle.P;
-	panel[ATC_Panel::Brake_notches] = handle.B;
 	panel[ATC_Panel::Master_Controller_key] = MasCon_key;
 	panel[ATC_Panel::ORP_speed] = int(TASC.Limit * 10);	//debug
 

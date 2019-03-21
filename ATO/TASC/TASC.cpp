@@ -4,44 +4,43 @@
 
 
 void c_TASC::Control(State S, int * panel, int * sound) {
-	control.P = 0;
+	this->control.P = 0;
 	panel[ATC_Panel::TASC_braking] = false;
 	if (ATCstatus & ATC_Status::TASC_ON) {
 		//PÝ’è
 		this->Distance = this->Location - S.Z;
 		this->Limit = sqrt(this->Distance * DECELERATION_BRAKE);
-
+		if (this->Limit >= MAX_SPEED || isnan(this->Limit)) {
+			this->Limit = MAX_SPEED;
+		}
 
 		//B”»’è
 		if (ATCstatus & ATC_Status::TASC_control) {
-			ATCstatus |= ATC_Status::TASC_doing;
 			if (this->Limit * 1.1 < S.V) {
-				if (control.B >= 0 && control.B <= specific.B) {
-					control.B++;
+				if (this->control.B >= 0 && this->control.B <= specific.B) {
+					ATCstatus |= ATC_Status::TASC_doing;
+					this->control.B++;
 				}
 			}
 			else if (this->Limit * 0.9 > S.V) {
-				if (control.B >= 0 && control.B <= specific.B) {
-					control.B--;
+				if (this->control.B >= 0 && this->control.B <= specific.B) {
+					ATCstatus |= ATC_Status::TASC_doing;
+					this->control.B--;
 				}
 			}
-			else {
-				ATCstatus &= ~ATC_Status::TASC_doing;
-			}
-			if (S.V < 0.5) {
+			if (abs(S.V) < 0.75) {
 				ATCstatus |= ATC_Status::TASC_stopping;
 				ATCstatus &= ~ATC_Status::TASC_control;
 				ATCstatus &= ~ATC_Status::TASC_doing;
-
 			}
 		}
 
 
 		//“]“®–hŽ~B
 		if (ATCstatus & ATC_Status::TASC_stopping) {
-			control.B = 4;
-			if (manual.B > control.B) {
-				control.B = 0;
+			this->control.B = 4;
+			if (manual.B > this->control.B) {
+				this->control.B = 0;
 				ATCstatus &= ~ATC_Status::TASC_stopping;
 			}
 		}
@@ -81,6 +80,7 @@ void c_TASC::setStatus(bool in) {
 void c_TASC::inEmergency(void) {
 	ATCstatus &= ~ATC_Status::TASC_control;
 	ATCstatus &= ~ATC_Status::TASC_doing;
+	ATCstatus &= ~ATC_Status::TASC_stopping;
 	this->control.P = 0;
 	this->control.B = 0;
 }
