@@ -16,7 +16,7 @@
 const int SpeedLimit[256] = {0,0,0,0,0,0,0,0,0,0,0,5,10,15,20,25,30,35,40,45,50,55,60,65,70,75,80,85,90,95,100,105,110,115,120,0,0,125,130,135,140,145,150,155,160,165,170,175,180,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,15,25,45,55,65,75,90,100,110,120,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
-enum ATC_Status {
+enum class ATC_Status : int {
 	OFF = 0x0000,	//SW=off
 	ON = 0x8000,	//SW=on
 
@@ -49,7 +49,7 @@ enum ATC_Status {
 };
 
 
-enum ATC_Beacon {
+enum class ATC_Beacon : int {
 	notice_force = 7,	//前方予告（強制）
 	notice_link = 31,	//前方予告（リアルタイム）
 	ORP = 12,	//ORP添線
@@ -62,14 +62,14 @@ enum ATC_Beacon {
 };
 
 
-enum ATC_Panel {
+enum class ATC_Panel : int {
 	ATC_emergency = 22,	//ATC非常
 	ATC_braking,	//ATC常用
 	Brake_notches = 51,	//全指令総合B段数(ATC/ATO/TASC)	切0,常用1-7,非常9
 	Power_notches = 66,	//全指令総合P段数(ATC/ATO)
 	Brake_notches_unic = 67,	//全指令総合B段数(ATC/ATO/TASC)
 	TASC_SW = 73,	//TASC切替スイッチ	切<=>ATO/TASC
-	Master_Controller_key = 92,	//マスコンキー
+	Master_Controller_Key = 92,	//マスコンキー
 	notice = 133,	//前方予告
 	ORP_speed = 135,	//ORP
 	TASC_power = 136,	//TASC灯
@@ -119,13 +119,13 @@ enum ATC_Panel {
 };
 
 
-enum ATC_Sound {
+enum class ATC_Sound : int {
 	ATC_bell = 2,	//ATC単打ベル
 	ATC_notice = 4,	//前方予告
 };
 
 
-enum ATC_Signal {
+enum class ATC_Signal : int {
 	ATC_02 = 9,
 	ATC_01,
 	ATC_05,
@@ -157,10 +157,10 @@ enum ATC_Signal {
 };
 
 
-enum ATC_Switch {
+enum class ATC_Switch : int {
 };
 
-enum Key{
+enum class Key : int {
 KeyOff = 0,	//off
 TRTA = 1,	//TRTA(S)
 TOB = 2,	//東武(T)

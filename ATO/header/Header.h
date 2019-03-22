@@ -21,9 +21,9 @@ extern bool door;	//ドア状態
 extern int ATCstatus;	//ATC状態
 extern int LimitSpeed;	//制限速度
 extern double accelaration;	//加減速度[km/h/s]
-extern bool key_S, key_A1, key_A2, key_B1, key_B2, key_C1, key_C2, key_D, key_E, key_F, key_G, key_H, key_I, key_J, key_K, key_L;	//ATSkey
+extern bool Key_S, Key_A1, Key_A2, Key_B1, Key_B2, Key_C1, Key_C2, Key_D, Key_E, Key_F, Key_G, Key_H, Key_I, Key_J, Key_K, Key_L;	//ATSKey
 
-extern int MasCon_key;	//マスコンキー
+extern int MasCon_Key;	//マスコンキー
 extern int ATC_SW;	//ATC切り替えSW
 extern int lag_cnt;	//ラグ用カウンター
 extern bool isLoad;	//ラグ制御伝達用

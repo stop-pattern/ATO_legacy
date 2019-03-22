@@ -16,30 +16,30 @@ void c_ATC::Control(State S, int * panel, int * sound) {/*
 				panel[i] = false;
 			}
 			panel[LimitSpeed / 5 + 102] = true;
-			sound[ATC_Sound::ATC_bell] = SoundInfo::PlayOnce;
+			sound[static_cast<int>(ATC_Sound::ATC_bell)] = SoundInfo::PlayOnce;
 		}
 		else {
-			sound[ATC_Sound::ATC_bell] = SoundInfo::PlayContinue;
+			sound[static_cast<int>(ATC_Sound::ATC_bell)] = SoundInfo::PlayContinue;
 		}
 
 
 		//ëOï˚ó\çê
 		if (this->isNotice && (S.T - this->notice_time) / FORWARDNOTICE % 2) {
-			panel[ATC_Panel::notice] = true;
+			panel[static_cast<int>(ATC_Panel::notice)] = true;
 			panel[this->notice_panel] = true;
 		}
 		else {
-			panel[ATC_Panel::notice] = false;
+			panel[static_cast<int>(ATC_Panel::notice)] = false;
 			panel[this->notice_panel] = false;
 		}
 
 
 		//ë¨ìxè∆ç∏
-		if (!(ATCstatus & ATC_Status::ATC_brake)) {
+		if (!(ATCstatus & static_cast<int>(ATC_Status::ATC_brake))) {
 			this->brake_cnt = S.T;
 		}
 		if (Limit + 2 < S.V) {
-			ATCstatus |= ATC_Status::ATC_brake;
+			ATCstatus |= static_cast<int>(ATC_Status::ATC_brake);
 			this->control.B = int(specific.E / 2);
 			if (Limit + 5 < S.V) {
 				if (S.T - brake_cnt > BRAKE_HALF) {
@@ -49,7 +49,7 @@ void c_ATC::Control(State S, int * panel, int * sound) {/*
 		}
 		else {
 			control.B = 0;
-			ATCstatus &= ~ATC_Status::ATC_brake;
+			ATCstatus &= ~static_cast<int>(ATC_Status::ATC_brake);
 		}
 
 		changeSignal = false;

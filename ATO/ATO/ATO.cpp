@@ -6,18 +6,18 @@
 
 
 void c_ATO::Control(State S, int * panel, int * sound) {
-		if (ATCstatus & ATC_Status::ATO_stopping) {
+		if (ATCstatus & static_cast<int>(ATC_Status::ATO_stopping)) {
 			this->control.P = 0;
 			this->control.B = 4;
 		}
 
 		//î≠é‘îªíË
 		if (this->Departure()) {
-			ATCstatus |= ATC_Status::ATO_control;
+			ATCstatus |= static_cast<int>(ATC_Status::ATO_control);
 		}
 
 		//ATOêßå‰
-		if (ATCstatus & ATC_Status::ATO_control) {
+		if (ATCstatus & static_cast<int>(ATC_Status::ATO_control)) {
 			//å∏ë¨êßå‰
 			if (LimitSpeed + 1 < S.V) {
 				if (this->control.B < specific.B) {
@@ -74,7 +74,7 @@ void c_ATO::CSC() {
 
 
 bool c_ATO::Departure() {
-	if (key_A1 == true && (key_A2 == true || key_B1 == true)) {
+	if (A1 == true && (A2 == true || B1 == true)) {
 		if (door == false && Stat.V == 0 && manual.B == 0 && manual.P == 0 && manual.R == 1 && LimitSpeed >= 25) {
 			this->control.P = 0;
 			this->control.B = 0;
@@ -90,7 +90,7 @@ void c_ATO::SignalChange() {
 
 
 void c_ATO::ChangeMode(int in) {
-	if (key_S == true) {
+	if (S == true) {
 		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
 			if (this->Mode > 0 && this->Mode < 3) {
 				this->Mode += in;
@@ -111,8 +111,8 @@ void c_ATO::setPattern(Beacon b) {
 }
 
 void c_ATO::inEmergency(void) {
-	ATCstatus &= ~ATC_Status::ATO_control;
-	ATCstatus &= ~ATC_Status::ATO_doing;
+	ATCstatus &= ~static_cast<int>(ATC_Status::ATO_control);
+	ATCstatus &= ~static_cast<int>(ATC_Status::ATO_doing);
 	this->control.P = 0;
 	this->control.B = 0;
 	this->isCSC = false;

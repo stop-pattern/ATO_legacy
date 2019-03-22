@@ -46,16 +46,16 @@ void c_INI::getIni(string p) {
 	
 	
 	
-	//int example = GetPrivateProfileInt("section", "key", default, path);
+	//int example = GetPrivateProfileInt("section", "static_cast<int>(Key", default, path);
 
 	/*
 	// --- <filename>.ini ---
 	[section]
-	key = value
+	static_cast<int>(Key = value
 	*/
 
 	/*
-	if (*section == nullptr || *key == nullptr)	{
+	if (*section == nullptr || *static_cast<int>(Key == nullptr)	{
 		example = default;
 	}
 	*/
@@ -64,14 +64,14 @@ void c_INI::getIni(string p) {
 /*
 UINT GetPrivateProfileInt(
 						LPCTSTR lpAppName,
-						LPCTSTR lpKeyName,
+						LPCTSTR lpstatic_cast<int>(KeyName,
 						INT nDefault,
 						LPCTSTR lpFileName
 						);
 
 DWORD GetPrivateProfileString(
 							LPCTSTR lpAppName,	//セクション名
-							LPCTSTR lpKeyName,	//キー名
+							LPCTSTR lpstatic_cast<int>(KeyName,	//キー名
 							LPCTSTR nDefault,	//デフォルト値
 							LPTSTR lpReturnedString,	//返り値格納先ポインタ
 							DWORD nSize	//lpReturnedStringのバッファサイズ

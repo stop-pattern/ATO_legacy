@@ -57,7 +57,7 @@ DE void SC Initialize(int b) {
 }
 DE Hand SC Elapse(State S, int * panel, int * sound) {
 	accelaration = (S.V - Stat.V) / (S.T - Stat.T) * 1000;
-	//MasCon_key = panel[92];
+	//MasCon_Key = panel[92];
 	//ATC_SW = panel[72];
 
 	handle.P = manual.P;
@@ -65,7 +65,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	handle.R = manual.R;
 
 
-	if (MasCon_key != Key::KeyOff) {
+	if (MasCon_Key != static_cast<int>(Key::KeyOff)) {
 		if (S.T - lag_cnt >= LAG) {
 			isLoad = true;
 			lag_cnt = S.T;
@@ -76,103 +76,103 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 	}
 
 	//ATO
-	if (ATCstatus & ATC_Status::ATO_ON) {
-		panel[ATC_Panel::ATO_power] = true;
+	if (ATCstatus & static_cast<int>(ATC_Status::ATO_ON)) {
+		panel[static_cast<int>(ATC_Panel::ATO_power)] = true;
 
 		if (isLoad) {
 			ATO.Control(S, panel, sound);	//制御関数
 		}
 
 		//ATO動作
-		if (ATCstatus & ATC_Status::ATO_control) {
+		if (ATCstatus & static_cast<int>(ATC_Status::ATO_control)) {
 
 			if (manual.B == 0 && manual.P == 0) {
 				handle.P = ATO.control.P;
-				panel[ATC_Panel::ATO_P] = ATO.control.P + 1;
-				panel[ATC_Panel::ATO_controling] = true;
+				panel[static_cast<int>(ATC_Panel::ATO_P)] = ATO.control.P + 1;
+				panel[static_cast<int>(ATC_Panel::ATO_controling)] = true;
 			}
 			else {
 				ATO.control.P = 0;
-				panel[ATC_Panel::ATO_P] = 0;
+				panel[static_cast<int>(ATC_Panel::ATO_P)] = 0;
 			}
 
 			if (manual.P == 0 && manual.B < ATO.control.B) {
 				handle.B = ATO.control.B;
-				panel[ATC_Panel::ATO_B] = ATO.control.B + 1;
+				panel[static_cast<int>(ATC_Panel::ATO_B)] = ATO.control.B + 1;
 			}
 			else {
-				panel[ATC_Panel::ATO_B] = 0;
+				panel[static_cast<int>(ATC_Panel::ATO_B)] = 0;
 			}
 		}
 	}
 	else {
-		panel[ATC_Panel::Brake_notches] = manual.B;
-		panel[ATC_Panel::ATO_P] = 0;
-		panel[ATC_Panel::ATO_B] = 0;
-		panel[ATC_Panel::ATO_power] = false;
-		panel[ATC_Panel::ATO_controling] = false;
+		panel[static_cast<int>(ATC_Panel::Brake_notches)] = manual.B;
+		panel[static_cast<int>(ATC_Panel::ATO_P)] = 0;
+		panel[static_cast<int>(ATC_Panel::ATO_B)] = 0;
+		panel[static_cast<int>(ATC_Panel::ATO_power)] = false;
+		panel[static_cast<int>(ATC_Panel::ATO_controling)] = false;
 	}
-	panel[ATC_Panel::ATO_debug] = int(ATO.Limit);
+	panel[static_cast<int>(ATC_Panel::ATO_debug)] = int(ATO.Limit);
 
 
 	//TASC
-	if (ATCstatus & ATC_Status::TASC_ON) {
+	if (ATCstatus & static_cast<int>(ATC_Status::TASC_ON)) {
 		if (isLoad) {
 			TASC.Control(S, panel, sound);	//制御関数
 		}
 
-		panel[TASC_release] = false;
-		panel[TASC_braking] = false;
-		panel[TASC_noches] = 0;
-		panel[TASC_failed] = false;
-		MasCon_key == Key::SEB ? panel[TASC_power_M] = true : panel[TASC_power] = true;
+		panel[static_cast<int>(ATC_Panel::TASC_release)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_braking)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_noches)] = 0;
+		panel[static_cast<int>(ATC_Panel::TASC_failed)] = false;
+		MasCon_Key == static_cast<int>(Key::SEB) ? panel[static_cast<int>(ATC_Panel::TASC_power_M)] = true : panel[static_cast<int>(ATC_Panel::TASC_power)] = true;
 
-		if (ATCstatus & ATC_Status::TASC_control) {
-			MasCon_key == Key::SEB ? panel[TASC_controling_M] = true : panel[TASC_controling] = false;
+		if (ATCstatus & static_cast<int>(ATC_Status::TASC_control)) {
+			MasCon_Key == static_cast<int>(Key::SEB) ? panel[static_cast<int>(ATC_Panel::TASC_controling_M)] = true : panel[static_cast<int>(ATC_Panel::TASC_controling)] = false;
 
 			//TASC動作
-			if (ATCstatus & ATC_Status::TASC_doing) {
+			if (ATCstatus & static_cast<int>(ATC_Status::TASC_doing)) {
 				if (TASC.control.B > handle.B) {
 					handle.P = 0;
 					handle.B = TASC.control.B;
-					panel[ATC_Panel::TASC_noches] = TASC.control.B + 1;
+					panel[static_cast<int>(ATC_Panel::TASC_noches)] = TASC.control.B + 1;
 				}
 			}
 		}
 	}
 	else {
-		panel[TASC_power] = false;
-		panel[TASC_release] = false;
-		panel[TASC_braking] = false;
-		panel[TASC_controling] = false;
-		panel[TASC_noches] = 0;
-		panel[TASC_failed] = false;
-		panel[TASC_power_M] = false;
-		panel[TASC_controling_M] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_power)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_release)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_braking)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_controling)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_noches)] = 0;
+		panel[static_cast<int>(ATC_Panel::TASC_failed)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_power_M)] = false;
+		panel[static_cast<int>(ATC_Panel::TASC_controling_M)] = false;
 	}
-	panel[TASC_debug] = int(TASC.Limit);
+	panel[static_cast<int>(ATC_Panel::TASC_debug)] = int(TASC.Limit);
 
 
 	//ATCブレーキ
-	if (ATCstatus & ATC_Status::ATC_ON) {
+	if (ATCstatus & static_cast<int>(ATC_Status::ATC_ON)) {
 		ATC.Control(S, panel, sound);	//制御関数
 
-		if (ATCstatus & ATC_Status::ATC_brake) {
+		if (ATCstatus & static_cast<int>(ATC_Status::ATC_brake)) {
 			if (ATC.control.B > manual.B) {
 				handle.P = 0;
 				handle.B = ATC.control.B;
-				panel[ATC_Panel::ATC_braking] = true;
+				panel[static_cast<int>(ATC_Panel::ATC_braking)] = true;
 			}
-			else panel[ATC_Panel::ATC_braking] = false;
+			else panel[static_cast<int>(ATC_Panel::ATC_braking)] = false;
 		}
-		else panel[ATC_Panel::ATC_braking] = false;
+		else panel[static_cast<int>(ATC_Panel::ATC_braking)] = false;
 	}
 
-	panel[ATC_Panel::Brake_notches] = handle.B == specific.E ? handle.B + 1 : handle.B;
-	panel[ATC_Panel::Brake_notches_unic] = handle.B == specific.E ? handle.B + 1 : handle.B;
-	panel[ATC_Panel::Power_notches] = handle.P;
-	panel[ATC_Panel::Master_Controller_key] = MasCon_key;
-	panel[ATC_Panel::ORP_speed] = int(TASC.Limit * 10);	//debug
+	panel[static_cast<int>(ATC_Panel::Brake_notches)] = handle.B == specific.E ? handle.B + 1 : handle.B;
+	panel[static_cast<int>(ATC_Panel::Brake_notches_unic)] = handle.B == specific.E ? handle.B + 1 : handle.B;
+	panel[static_cast<int>(ATC_Panel::Power_notches)] = handle.P;
+	panel[static_cast<int>(ATC_Panel::Master_Controller_Key)] = MasCon_Key;
+	panel[static_cast<int>(ATC_Panel::ORP_speed)] = int(TASC.Limit * 10);	//debug
 
 
 	Stat = S;
@@ -193,20 +193,20 @@ DE void SC SetReverser(int r) {
 }
 DE void SC DoorOpen() {
 	door = true;
-	if (ATCstatus & ATC_Status::ATC_ON) {
+	if (ATCstatus & static_cast<int>(ATC_Status::ATC_ON)) {
 		//ATC.control.B = specific.E;	//？
 		ATO.SignalChange();
 		ATC.setSignal();
 	}
-	if (ATCstatus & ATC_Status::ATO_ON) {
-		ATCstatus &= ~ATC_Status::ATO_control;
-		ATCstatus &= ~ATC_Status::ATO_doing;
-		ATCstatus |= ATC_Status::ATO_stopping;
+	if (ATCstatus & static_cast<int>(ATC_Status::ATO_ON)) {
+		ATCstatus &= ~static_cast<int>(ATC_Status::ATO_control);
+		ATCstatus &= ~static_cast<int>(ATC_Status::ATO_doing);
+		ATCstatus |= static_cast<int>(ATC_Status::ATO_stopping);
 	}
-	if (ATCstatus & ATC_Status::TASC_ON) {
-		ATCstatus &= ~ATC_Status::TASC_control;
-		ATCstatus &= ~ATC_Status::TASC_doing;
-		ATCstatus |= ATC_Status::TASC_stopping;
+	if (ATCstatus & static_cast<int>(ATC_Status::TASC_ON)) {
+		ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control);
+		ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing);
+		ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping);
 		TASC.setStatus(false);	//TASC制御解放
 	}
 }
@@ -218,64 +218,64 @@ DE void SC DoorClose() {
 DE void SC KeyDown(int k) {
 	switch (k) {
 	case ATSKeys::S:
-		key_S = true;
+		Key_S = true;
 		break;
 	case ATSKeys::A1:
-		key_A1 = true;
+		Key_A1 = true;
 		break;
 	case ATSKeys::A2:
-		key_A2 = true;
+		Key_A2 = true;
 		break;
-	case ATSKeys::B1:
-		key_B1 = true;
+	case ATSKeys::B1 :
+		Key_B1 = true;
 		break;
-	case ATSKeys::B2:
-		key_B2 = true;
+	case ATSKeys::B2 :
+		Key_B2 = true;
 		break;
-	case ATSKeys::C1:
-		key_C1 = true;
+	case ATSKeys::C1 :
+		Key_C1 = true;
 		break;
-	case ATSKeys::C2:
-		key_C2 = true;
+	case ATSKeys::C2 :
+		Key_C2 = true;
 		break;
-	case ATSKeys::D:
-		key_D = true;
+	case ATSKeys::D :
+		Key_D = true;
 		break;
-	case ATSKeys::E:
-		key_E = true;
+	case ATSKeys::E :
+		Key_E = true;
 		ATO.ChangeMode(-1);
 		break;
-	case ATSKeys::F:
-		key_F = true;
+	case ATSKeys::F :
+		Key_F = true;
 		ATO.ChangeMode(+1);
 		break;
-	case ATSKeys::G:
-		key_G = true;
-		if (key_S) {
-			ATCstatus &= ~ATC_Status::ON;
+	case ATSKeys::G :
+		Key_G = true;
+		if (Key_S) {
+			ATCstatus &= ~static_cast<int>(ATC_Status::ON);
 			SetStatus();
 		}
 		break;
-	case ATSKeys::H:
-		key_H = true;
-		if (key_S) {
-			ATCstatus |= ATC_Status::ON;
+	case ATSKeys::H :
+		Key_H = true;
+		if (Key_S) {
+			ATCstatus |= static_cast<int>(ATC_Status::ON);
 			SetStatus();
 		}
 		break;
-	case ATSKeys::I:
-		key_I = true;
+	case ATSKeys::I :
+		Key_I = true;
 		setKey(-1);
 		break;
-	case ATSKeys::J:
-		key_J = true;
+	case ATSKeys::J :
+		Key_J = true;
 		setKey(+1);
 		break;
-	case ATSKeys::K:
-		key_K = true;
+	case ATSKeys::K :
+		Key_K = true;
 		break;
 	case ATSKeys::L:
-		key_L = true;
+		Key_L = true;
 		break;
 	default:
 		break;
@@ -284,52 +284,52 @@ DE void SC KeyDown(int k) {
 DE void SC KeyUp(int k) {
 	switch (k) {
 	case ATSKeys::S:
-		key_S = false;
+		Key_S = false;
 		break;
 	case ATSKeys::A1:
-		key_A1 = false;
+		Key_A1 = false;
 		break;
 	case ATSKeys::A2:
-		key_A2 = false;
+		Key_A2 = false;
 		break;
 	case ATSKeys::B1:
-		key_B1 = false;
+		Key_B1 = false;
 		break;
 	case ATSKeys::B2:
-		key_B2 = false;
+		Key_B2 = false;
 		break;
 	case ATSKeys::C1:
-		key_C1 = false;
+		Key_C1 = false;
 		break;
 	case ATSKeys::C2:
-		key_C2 = false;
+		Key_C2 = false;
 		break;
 	case ATSKeys::D:
-		key_D = false;
+		Key_D = false;
 		break;
 	case ATSKeys::E:
-		key_E = false;
+		Key_E = false;
 		break;
 	case ATSKeys::F:
-		key_F = false;
+		Key_F = false;
 		break;
 	case ATSKeys::G:
-		key_G = false;
+		Key_G = false;
 		break;
 	case ATSKeys::H:
-		key_H = false;
+		Key_H = false;
 		break;
 	case ATSKeys::I:
-		key_I = false;
+		Key_I = false;
 		break;
 	case ATSKeys::J:
-		key_J = false;
+		Key_J = false;
 		break;
 	case ATSKeys::K:
-		key_K = false;
+		Key_K = false;
 		break;
 	case ATSKeys::L:
-		key_L = false;
+		Key_L = false;
 		break;
 	default:
 		break;
@@ -347,28 +347,28 @@ DE void SC SetSignal(int a) {
 }
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {
-	case ATC_Beacon::notice_force:
-	case ATC_Beacon::notice_link:
+	case static_cast<int>(ATC_Beacon::notice_force):
+	case static_cast<int>(ATC_Beacon::notice_link) :
 		ATC.notice(b.Sig, b.Data);
 		break;
-	case ATC_Beacon::ORP:
+	case static_cast<int>(ATC_Beacon::ORP) :
 		break;
-	case ATC_Beacon::TASC_P0:
+	case static_cast<int>(ATC_Beacon::TASC_P0) :
 		TASC.setBeacon(0, b);
 		break;
-	case ATC_Beacon::TASC_P1:
+	case static_cast<int>(ATC_Beacon::TASC_P1) :
 		TASC.setBeacon(1, b);
 		break;
-	case ATC_Beacon::TASC_P2:
+	case static_cast<int>(ATC_Beacon::TASC_P2) :
 		TASC.setBeacon(2, b);
 		break;
-	case ATC_Beacon::TASC_P3:
+	case static_cast<int>(ATC_Beacon::TASC_P3) :
 		TASC.setBeacon(3, b);
 		break;
-	case ATC_Beacon::TASC_P4:
+	case static_cast<int>(ATC_Beacon::TASC_P4) :
 		TASC.setBeacon(4, b);
 		break;
-	case ATC_Beacon::TASC_passage:
+	case static_cast<int>(ATC_Beacon::TASC_passage) :
 		TASC.setBeacon(-1, b);
 	default:
 		break;
