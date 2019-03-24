@@ -22,7 +22,7 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 			if (LimitSpeed + 1 < S.V) {
 				if (this->control.B < specific.B) {
 					if (rand() % 2) {
-						this->control.B += 1;
+						this->control.B++;
 					}
 				}
 			}
@@ -30,7 +30,7 @@ void c_ATO::Control(State S, int * panel, int * sound) {
 			else if (this->Limit > S.V) {
 				if (this->control.P < specific.P) {
 					if (rand() % 2) {
-						this->control.P += 1;
+						this->control.P++;
 					}
 				}
 			}
@@ -74,7 +74,7 @@ void c_ATO::CSC() {
 
 
 bool c_ATO::Departure() {
-	if (A1 == true && (A2 == true || B1 == true)) {
+	if (Key_A1 == true && (Key_A2 == true || Key_B1 == true)) {
 		if (door == false && Stat.V == 0 && manual.B == 0 && manual.P == 0 && manual.R == 1 && LimitSpeed >= 25) {
 			this->control.P = 0;
 			this->control.B = 0;

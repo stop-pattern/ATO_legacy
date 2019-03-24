@@ -16,16 +16,38 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 
 		//B”»’è
 		if (ATCstatus & static_cast<int>(ATC_Status::TASC_control)) {
-			if (this->Limit * 1.1 < S.V) {
-				if (this->control.B >= 0 && this->control.B <= specific.B) {
+			if (this->control.B >= 0 && this->control.B <= specific.B) {
+				if (this->Limit * 0.8 < S.V) {	//TASC“®ì”»’è
 					ATCstatus |= static_cast<int>(ATC_Status::TASC_doing);
-					this->control.B++;
+
+					if (this->control.B > 0) {
+						if (this->Limit < S.V) {
+							if (rand() % 3) this->control.B++;
+						}
+						else {
+							if (rand() % 3) this->control.B--;
+						}
+					}
+					else {
+						//B”»’è
+						if (this->Limit * 0.9 < S.V) {
+							if (rand() % 2) this->control.B++;
+						}
+						else if (this->Limit * 1.1 > S.V) {
+							if (rand() % 2) this->control.B--;
+						}
+					}
+
+					//”ÍˆÍŠO’ù³
+					if (this->control.B < 0) {
+						this->control.B = 0;
+					}
+					else if (this->control.B >= specific.E) {
+						this->control.B = specific.B;
+					}
 				}
-			}
-			else if (this->Limit * 0.9 > S.V) {
-				if (this->control.B >= 0 && this->control.B <= specific.B) {
-					ATCstatus |= static_cast<int>(ATC_Status::TASC_doing);
-					this->control.B--;
+				else {
+					this->control.B = 0;
 				}
 			}
 			if (abs(S.V) < 0.75) {
@@ -35,6 +57,8 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 			}
 		}
 
+		if (ATCstatus & static_cast<int>(ATC_Status::TASC_stopping)) {
+		}
 
 		//“]“®–hŽ~B
 		if (ATCstatus & static_cast<int>(ATC_Status::TASC_stopping)) {

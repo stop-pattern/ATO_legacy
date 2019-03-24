@@ -131,7 +131,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 			MasCon_Key == static_cast<int>(Key::SEB) ? panel[static_cast<int>(ATC_Panel::TASC_controling_M)] = true : panel[static_cast<int>(ATC_Panel::TASC_controling)] = false;
 
 			//TASC動作
-			if (ATCstatus & static_cast<int>(ATC_Status::TASC_doing)) {
+			if (true && ATCstatus & static_cast<int>(ATC_Status::TASC_doing)) {
 				if (TASC.control.B > handle.B) {
 					handle.P = 0;
 					handle.B = TASC.control.B;
