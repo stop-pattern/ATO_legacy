@@ -20,12 +20,12 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 				if (this->Limit * 0.8 < S.V) {	//TASC“®ì”»’è
 					ATCstatus |= static_cast<int>(ATC_Status::TASC_doing);
 
-					if (this->control.B > 0) {
-						if (this->Limit < S.V) {
-							if (rand() % 3) this->control.B++;
+					if (this->control.B * 0.95 > 0) {
+						if (this->Limit * 0.95 < S.V) {
+							if (rand() % 2) this->control.B++;
 						}
-						else {
-							if (rand() % 3) this->control.B--;
+						else if (this->Limit * 1.05 < S.V) {
+							if (rand() % 2) this->control.B--;
 						}
 					}
 					else {
@@ -37,23 +37,24 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 							if (rand() % 2) this->control.B--;
 						}
 					}
-
-					//”ÍˆÍŠO’ù³
-					if (this->control.B < 0) {
-						this->control.B = 0;
-					}
-					else if (this->control.B >= specific.E) {
-						this->control.B = specific.B;
-					}
 				}
 				else {
 					this->control.B = 0;
 				}
 			}
-			if (abs(S.V) < 0.75) {
-				ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping);
-				ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control);
-				ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing);
+			if (abs(S.V) < 2.5) {
+				if (this->control.B > specific.E / 2) {
+					if (rand() % 2) this->control.B--;
+				}
+				else if (this->control.B < specific.E / 2) {
+					if (rand() % 2) this->control.B++;
+				}
+				if (abs(S.V) < 0.5 && this->control.B > 0) {
+					if (rand() % 2) this->control.B--;
+					if (abs(S.V) < 0.25) {
+						ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping);
+					}
+				}
 			}
 		}
 
@@ -62,12 +63,22 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 
 		//“]“®–hŽ~B
 		if (ATCstatus & static_cast<int>(ATC_Status::TASC_stopping)) {
+			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control);
+			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing);
 			this->control.B = 4;
 			if (manual.B > this->control.B) {
 				this->control.B = 0;
 				ATCstatus &= ~static_cast<int>(ATC_Status::TASC_stopping);
 			}
 		}
+	}
+
+	//”ÍˆÍŠO’ù³
+	if (this->control.B < 0) {
+		this->control.B = 0;
+	}
+	else if (this->control.B >= specific.E) {
+		this->control.B = specific.B;
 	}
 }
 

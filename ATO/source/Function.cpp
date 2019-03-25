@@ -46,7 +46,9 @@ void reload(void) {/*
 void SetStatus() {
 	if (ATCstatus & static_cast<int>(ATC_Status::ON)) {
 		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
-			ATCstatus &= static_cast<int>(ATC_Status::ATC_ON);	//ATC情報以外を消去
+			int mask = static_cast<int>(ATC_Status::ON) + static_cast<int>(ATC_Status::ATC_ON);
+			ATCstatus &= mask;	//SW情報とATC情報以外を消去
+			
 			switch (MasCon_Key) {
 			case static_cast<int>(Key::TRTA):
 				ATCstatus |= static_cast<int>(ATC_Status::ATO_ON);
@@ -61,13 +63,14 @@ void SetStatus() {
 			case static_cast<int>(Key::OER) :
 				break;
 			default:
+				ATCstatus &= ~static_cast<int>(ATC_Status::ATC_ON);
 				break;
 			}
 		}
 	}
 	else {
-		ATCstatus &= static_cast<int>(ATC_Status::ATC_ON);
-		ATCstatus &= ~static_cast<int>(ATC_Status::ON);
+		ATCstatus &= static_cast<int>(ATC_Status::ATC_ON);	//ATC情報以外を消去
+		ATCstatus &= ~static_cast<int>(ATC_Status::ON);	//SW=OFF
 	}
 }
 

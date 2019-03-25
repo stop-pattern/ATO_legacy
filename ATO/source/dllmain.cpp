@@ -162,6 +162,9 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 				handle.P = 0;
 				handle.B = ATC.control.B;
 				panel[static_cast<int>(ATC_Panel::ATC_braking)] = true;
+				panel[static_cast<int>(ATC_Panel::ATO_P)] = 0;
+				panel[static_cast<int>(ATC_Panel::ATO_B)] = 0;
+				panel[static_cast<int>(ATC_Panel::TASC_noches)] = 0;
 			}
 			else panel[static_cast<int>(ATC_Panel::ATC_braking)] = false;
 		}
@@ -350,6 +353,7 @@ DE void SC SetBeaconData(Beacon b) {
 	case static_cast<int>(ATC_Beacon::notice_force):
 	case static_cast<int>(ATC_Beacon::notice_link) :
 		ATC.notice(b.Sig, b.Data);
+		ATO.Forward_Deceleration(b);
 		break;
 	case static_cast<int>(ATC_Beacon::ORP) :
 		break;

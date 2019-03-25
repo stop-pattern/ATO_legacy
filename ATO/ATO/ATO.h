@@ -3,6 +3,8 @@
 
 #include "../header/ats.h"
 
+#define ATO_CSC_TIME 2500	//ATO定速判定時間
+
 
 class c_ATO {
 public:
@@ -13,13 +15,19 @@ public:
 	void ChangeMode(int);	//運転モード変更
 	void setPattern(Beacon); 	//地上子入力
 	void inEmergency(void);	//非常入力
+	void Forward_Deceleration(Beacon);	//事前減速
 
 	Hand control;	//ハンドル制御値
 	double Limit;	//目標速度
 private:
-	Beacon brake;	//現示下降事前減速
-	double location;
+	bool isFD;	//ATO事前減速
+	Beacon brake;	//ATO事前減速用地上子情報
+	int speed;	//目標速度
+	double Location;	//目標位置
+	double Distance;	//残距離
 	bool isCSC;	//ATO定速
+	int CSCspeed;	//定速維持速度
+	long int CSCcnt;	//定速判定
 	int Mode = 1;	//ATO運転モード
 	int button_buf;	//ボタン押下時ラグ判定用
 
