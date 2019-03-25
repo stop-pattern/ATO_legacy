@@ -15,6 +15,7 @@ public:
 	int Limit;	//制限速度
 	void set02(void);	//状態管理
 private:
+	int limit_panel;	//現示index
 	long int brake_cnt;	//ハーフブレーキ用カウンタ
 	bool changeSignal;	//現示変化
 	bool isNotice;	//前方予告

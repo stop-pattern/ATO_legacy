@@ -6,40 +6,20 @@
 
 
 //駅ジャンプ時再読み込み処理
-void reload(void) {/*
-	if (signal > 9 || signal < 36) {
-		int sig = signal;	//一時記憶
-		SetSignal(0);
-		if (ATCstatus & static_cast<int>(ATC_Status::ATC_ON) {
-			ATCstatus &= ~static_cast<int>(ATC_Status::ATC_brake;
-		}
-		if (ATCstatus & static_cast<int>(ATC_Status::ATO_ON) {
-			ATCstatus |= static_cast<int>(ATC_Status::ATO_stopping;
-			ATCstatus &= ~static_cast<int>(ATC_Status::ATO_control;
-			ATCstatus &= ~static_cast<int>(ATC_Status::ATO_doing;
-		}
-		if (ATCstatus & static_cast<int>(ATC_Status::TASC_ON) {
-			ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping;
-			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control;
-			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing;
-		}
-		SetSignal(sig);
+void reload(void) {
+	if (ATCstatus & static_cast<int>(ATC_Status::ATC_ON)) {
+		ATCstatus &= ~static_cast<int>(ATC_Status::ATC_brake);
 	}
-	else {
-		if (ATCstatus & static_cast<int>(ATC_Status::ATC_ON) {
-			ATCstatus &= ~static_cast<int>(ATC_Status::ATC_brake;
-		}
-		if (ATCstatus & static_cast<int>(ATC_Status::ATO_ON) {
-			ATCstatus |= static_cast<int>(ATC_Status::ATO_stopping;
-			ATCstatus &= ~static_cast<int>(ATC_Status::ATO_control;
-			ATCstatus &= ~static_cast<int>(ATC_Status::ATO_doing;
-		}
-		if (ATCstatus & static_cast<int>(ATC_Status::TASC_ON) {
-			ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping;
-			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control;
-			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing;
-		}
-	}*/
+	if (ATCstatus & static_cast<int>(ATC_Status::ATO_ON)) {
+		ATCstatus |= static_cast<int>(ATC_Status::ATO_stopping);
+		ATCstatus &= ~static_cast<int>(ATC_Status::ATO_control);
+		ATCstatus &= ~static_cast<int>(ATC_Status::ATO_doing);
+	}
+	if (ATCstatus & static_cast<int>(ATC_Status::TASC_ON)) {
+		ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping);
+		ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control);
+		ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing);
+	}
 }
 
 //ATO/TASCスイッチ操作
@@ -48,7 +28,7 @@ void SetStatus() {
 		if (Stat.V == 0 && manual.B > 0 && manual.P == 0) {
 			int mask = static_cast<int>(ATC_Status::ON) + static_cast<int>(ATC_Status::ATC_ON);
 			ATCstatus &= mask;	//SW情報とATC情報以外を消去
-			
+
 			switch (MasCon_Key) {
 			case static_cast<int>(Key::TRTA):
 				ATCstatus |= static_cast<int>(ATC_Status::ATO_ON);
