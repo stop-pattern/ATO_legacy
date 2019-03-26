@@ -7,8 +7,15 @@ ATO and TASC Plug-in for BVE5 by Stop_Pattern
 ご使用の際はソースを読んで地上子を置く初心者お断り鬼畜仕様ですので分かる方だけどうぞ  
 
 ## 環境
-- OS：Windows10  
-- Platform：BVETrainSim v5.7 (or later)
+### 開発環境
+- OS:	Windows10 (jp)
+- IDE:	VS2017&VS2019
+- Platform:	BVETrainSim v5.7 (5.7.6224.40815)
+- Other:　notepad++
+### 推奨動作環境
+- OS:	Windows10 (jp)
+- Platform:	BVETrainSim v5.7 (or later)
+但しfpsが極度に低くならない環境(最低でも常時10fps以上で安定)  
 
 ## サポート
 サポートなんてありません（爆  
