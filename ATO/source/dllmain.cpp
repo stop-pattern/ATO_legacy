@@ -158,7 +158,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		ATC.Control(S, panel, sound);	//制御関数
 
 		if (ATCstatus & static_cast<int>(ATC_Status::ATC_brake)) {
-			if (ATC.control.B > manual.B) {
+			if (ATC.control.B >= manual.B) {
 				handle.P = 0;
 				handle.B = ATC.control.B;
 				panel[static_cast<int>(ATC_Panel::ATC_braking)] = true;
@@ -170,6 +170,35 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		}
 		else panel[static_cast<int>(ATC_Panel::ATC_braking)] = false;
 	}
+
+	//TISunit
+	if (S.I != 0) {
+		if (S.I > 0) {	//電流+
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_0)] = 1;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_1)] = 1;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_2)] = 1;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_3)] = 1;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_4)] = 1;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_5)] = 1;
+		}
+		if (S.I < 0) {	//電流-
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_0)] = 2;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_1)] = 2;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_2)] = 2;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_3)] = 2;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_4)] = 2;
+			if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_5)] = 2;
+		}
+	}
+	else {	//電流0
+		if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_0)] = 0;
+		if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_1)] = 0;
+		if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_2)] = 0;
+		if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_3)] = 0;
+		if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_4)] = 0;
+		if (rand() % 10 == 0) panel[static_cast<int>(ATC_Panel::TIS_unit_5)] = 0;
+	}
+
 
 	panel[static_cast<int>(ATC_Panel::Brake_notches)] = handle.B == specific.E ? handle.B + 1 : handle.B;
 	panel[static_cast<int>(ATC_Panel::Brake_notches_unic)] = handle.B == specific.E ? handle.B + 1 : handle.B;
@@ -229,52 +258,52 @@ DE void SC KeyDown(int k) {
 	case ATSKeys::A2:
 		Key_A2 = true;
 		break;
-	case ATSKeys::B1 :
+	case ATSKeys::B1:
 		Key_B1 = true;
 		break;
-	case ATSKeys::B2 :
+	case ATSKeys::B2:
 		Key_B2 = true;
 		break;
-	case ATSKeys::C1 :
+	case ATSKeys::C1:
 		Key_C1 = true;
 		break;
-	case ATSKeys::C2 :
+	case ATSKeys::C2:
 		Key_C2 = true;
 		break;
-	case ATSKeys::D :
+	case ATSKeys::D:
 		Key_D = true;
 		break;
-	case ATSKeys::E :
+	case ATSKeys::E:
 		Key_E = true;
 		ATO.ChangeMode(-1);
 		break;
-	case ATSKeys::F :
+	case ATSKeys::F:
 		Key_F = true;
 		ATO.ChangeMode(+1);
 		break;
-	case ATSKeys::G :
+	case ATSKeys::G:
 		Key_G = true;
 		if (Key_S) {
 			ATCstatus &= ~static_cast<int>(ATC_Status::ON);
 			SetStatus();
 		}
 		break;
-	case ATSKeys::H :
+	case ATSKeys::H:
 		Key_H = true;
 		if (Key_S) {
 			ATCstatus |= static_cast<int>(ATC_Status::ON);
 			SetStatus();
 		}
 		break;
-	case ATSKeys::I :
+	case ATSKeys::I:
 		Key_I = true;
 		setKey(-1);
 		break;
-	case ATSKeys::J :
+	case ATSKeys::J:
 		Key_J = true;
 		setKey(+1);
 		break;
-	case ATSKeys::K :
+	case ATSKeys::K:
 		Key_K = true;
 		break;
 	case ATSKeys::L:
@@ -350,32 +379,32 @@ DE void SC SetSignal(int a) {
 }
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {
-	case static_cast<int>(ATC_Beacon::notice_force):
-	case static_cast<int>(ATC_Beacon::notice_link) :
-		ATC.notice(b.Sig, b.Data);
-		ATO.Forward_Deceleration(b);
-		break;
-	case static_cast<int>(ATC_Beacon::ORP) :
-		break;
-	case static_cast<int>(ATC_Beacon::TASC_P0) :
-		TASC.setBeacon(0, b);
-		break;
-	case static_cast<int>(ATC_Beacon::TASC_P1) :
-		TASC.setBeacon(1, b);
-		break;
-	case static_cast<int>(ATC_Beacon::TASC_P2) :
-		TASC.setBeacon(2, b);
-		break;
-	case static_cast<int>(ATC_Beacon::TASC_P3) :
-		TASC.setBeacon(3, b);
-		break;
-	case static_cast<int>(ATC_Beacon::TASC_P4) :
-		TASC.setBeacon(4, b);
-		break;
-	case static_cast<int>(ATC_Beacon::TASC_passage) :
-		TASC.setBeacon(-1, b);
-	default:
-		break;
+		case static_cast<int>(ATC_Beacon::notice_force) :
+			case static_cast<int>(ATC_Beacon::notice_link) :
+			ATC.notice(b.Sig, b.Data);
+			ATO.Forward_Deceleration(b);
+			break;
+			case static_cast<int>(ATC_Beacon::ORP) :
+				break;
+				case static_cast<int>(ATC_Beacon::TASC_P0) :
+					TASC.setBeacon(0, b);
+					break;
+					case static_cast<int>(ATC_Beacon::TASC_P1) :
+						TASC.setBeacon(1, b);
+						break;
+						case static_cast<int>(ATC_Beacon::TASC_P2) :
+							TASC.setBeacon(2, b);
+							break;
+							case static_cast<int>(ATC_Beacon::TASC_P3) :
+								TASC.setBeacon(3, b);
+								break;
+								case static_cast<int>(ATC_Beacon::TASC_P4) :
+									TASC.setBeacon(4, b);
+									break;
+									case static_cast<int>(ATC_Beacon::TASC_passage) :
+										TASC.setBeacon(-1, b);
+									default:
+										break;
 	}
 }
 
