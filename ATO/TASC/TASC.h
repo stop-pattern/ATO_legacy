@@ -11,6 +11,7 @@ public:
 	void setStatus(bool);	//status set
 	void inEmergency(void);	//非常入力
 	double Limit;	//目標速度
+	bool isControl;	//制御中
 private:
 	double Location;	//目標位置
 	double Distance;	//残距離

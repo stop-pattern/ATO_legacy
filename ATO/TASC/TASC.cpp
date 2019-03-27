@@ -30,16 +30,17 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 					}
 					else {
 						//B”»’è
-						if (this->Limit * 0.9 < S.V) {
+						if (this->Limit * 0.9 > S.V) {
 							if (rand() % 2) this->control.B++;
 						}
-						else if (this->Limit * 1.1 > S.V) {
+						else if (this->Limit * 1.1 < S.V) {
 							if (rand() % 2) this->control.B--;
 						}
 					}
 				}
 				else {
-					this->control.B = 0;
+					if (rand() % 2) this->control.B--;
+					//this->control.B = 0;
 				}
 			}
 			if (abs(S.V) < 2.5) {
@@ -51,18 +52,17 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 				}
 				if (abs(S.V) < 0.5 && this->control.B > 0) {
 					if (rand() % 2) this->control.B--;
-					if (abs(S.V) < 0.25) {
-						ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping);
-					}
+				}
+				if (abs(S.V) == 0) {
+					ATCstatus |= static_cast<int>(ATC_Status::TASC_stopping);
 				}
 			}
 		}
 
-		if (ATCstatus & static_cast<int>(ATC_Status::TASC_stopping)) {
-		}
 
 		//“]“®–hŽ~B
 		if (ATCstatus & static_cast<int>(ATC_Status::TASC_stopping)) {
+			this->isControl = false;
 			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_control);
 			ATCstatus &= ~static_cast<int>(ATC_Status::TASC_doing);
 			this->control.B = 4;
@@ -84,6 +84,7 @@ void c_TASC::Control(State S, int * panel, int * sound) {
 
 void c_TASC::setBeacon(int index, Beacon b) {
 	if (index >= 0 && index < 5) {
+		if (index == 1)	this->isControl = true;	//§Œäon
 		this->setStatus(true);
 		c_TASC::P[index][index / 1000] = b;
 		Location = Stat.Z + b.Data % 1000;

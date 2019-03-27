@@ -130,6 +130,10 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		if (ATCstatus & static_cast<int>(ATC_Status::TASC_control)) {
 			MasCon_Key == static_cast<int>(Key::SEB) ? panel[static_cast<int>(ATC_Panel::TASC_controling_M)] = true : panel[static_cast<int>(ATC_Panel::TASC_controling)] = false;
 
+			//TASC制御灯
+			if(TASC.isControl) panel[static_cast<int>(ATC_Panel::TASC_braking)] = true;
+			else panel[static_cast<int>(ATC_Panel::TASC_braking)] = false;
+
 			//TASC動作
 			if (true && ATCstatus & static_cast<int>(ATC_Status::TASC_doing)) {
 				if (TASC.control.B > handle.B) {
@@ -158,7 +162,7 @@ DE Hand SC Elapse(State S, int * panel, int * sound) {
 		ATC.Control(S, panel, sound);	//制御関数
 
 		if (ATCstatus & static_cast<int>(ATC_Status::ATC_brake)) {
-			if (ATC.control.B >= manual.B) {
+			if (ATC.control.B >= manual.B || (ATC.Limit == 0 && abs(S.V) < 1)) {
 				handle.P = 0;
 				handle.B = ATC.control.B;
 				panel[static_cast<int>(ATC_Panel::ATC_braking)] = true;
@@ -380,31 +384,31 @@ DE void SC SetSignal(int a) {
 DE void SC SetBeaconData(Beacon b) {
 	switch (b.Num) {
 		case static_cast<int>(ATC_Beacon::notice_force) :
-			case static_cast<int>(ATC_Beacon::notice_link) :
+		case static_cast<int>(ATC_Beacon::notice_link) :
 			ATC.notice(b.Sig, b.Data);
 			ATO.Forward_Deceleration(b);
 			break;
-			case static_cast<int>(ATC_Beacon::ORP) :
-				break;
-				case static_cast<int>(ATC_Beacon::TASC_P0) :
-					TASC.setBeacon(0, b);
-					break;
-					case static_cast<int>(ATC_Beacon::TASC_P1) :
-						TASC.setBeacon(1, b);
-						break;
-						case static_cast<int>(ATC_Beacon::TASC_P2) :
-							TASC.setBeacon(2, b);
-							break;
-							case static_cast<int>(ATC_Beacon::TASC_P3) :
-								TASC.setBeacon(3, b);
-								break;
-								case static_cast<int>(ATC_Beacon::TASC_P4) :
-									TASC.setBeacon(4, b);
-									break;
-									case static_cast<int>(ATC_Beacon::TASC_passage) :
-										TASC.setBeacon(-1, b);
-									default:
-										break;
+		case static_cast<int>(ATC_Beacon::ORP) :
+			break;
+		case static_cast<int>(ATC_Beacon::TASC_P0) :
+			TASC.setBeacon(0, b);
+			break;
+		case static_cast<int>(ATC_Beacon::TASC_P1) :
+			TASC.setBeacon(1, b);
+			break;
+		case static_cast<int>(ATC_Beacon::TASC_P2) :
+			TASC.setBeacon(2, b);
+			break;
+		case static_cast<int>(ATC_Beacon::TASC_P3) :
+			TASC.setBeacon(3, b);
+			break;
+		case static_cast<int>(ATC_Beacon::TASC_P4) :
+			TASC.setBeacon(4, b);
+			break;
+		case static_cast<int>(ATC_Beacon::TASC_passage) :
+			TASC.setBeacon(-1, b);
+		default:
+			break;
 	}
 }
 
